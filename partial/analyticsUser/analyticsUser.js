@@ -20,12 +20,11 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
     mapTypeId: google.maps.MapTypeId.ROADMAP
   };
 
-  $scope.sliderUpdate = function(value) {
-    $scope.$apply(function() {
-      $scope.currentDate = moment(value).toDate();
+  $scope.$watch('currentDate', function(newVal) {
+    if (newVal) {
       $scope.skipTime();
-    });
-  };
+    }
+  });
 
   $scope.formatTime = function (value) {
     var hour = value / 60;
@@ -96,7 +95,10 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
     });
 
     if ( location ) {
+      currentPositionMarker.setMap($scope.locationMap);
       currentPositionMarker.setPosition(new google.maps.LatLng(location.lat, location.lng));
+    } else {
+      currentPositionMarker.setMap(null);
     }
   };
 

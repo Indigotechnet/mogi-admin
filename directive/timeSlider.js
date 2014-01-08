@@ -1,11 +1,13 @@
+/* global moment */
 angular.module('mogi-admin').directive('timeSlider', function() {
 	return {
     template : '<div><input type="range" /><div>',
-		restrict: 'E',
+		require: '^ngModel',
+    restrict: 'E',
       scope: {
         min: '=',
         max: '=',
-        callback: '='
+        ngModel: '='
       },
       link: function(scope, element, attrs) {
         var adjusting, curTimeDiv, rangeInput, rangeInputElement, rangeInputOffset, spans;
@@ -15,21 +17,30 @@ angular.module('mogi-admin').directive('timeSlider', function() {
         rangeInput.min = scope.min;
         rangeInput.max = scope.max;
         rangeInput.step = attrs.step;
-        rangeInput.value = scope.min;
+        rangeInput.value = moment(scope.ngModel).valueOf();
+
+        scope.$watch('ngModel', function(newVal) {
+          if (newVal) {
+            rangeInput.value = moment(newVal).valueOf();
+          }
+        });
 
         rangeInputElement.bind('change', function(event) {
           var curValue;
           adjusting = true;
-          curValue = parseInt(event.target.value);
-          //return moveCurTimeDiv(curValue);
+          curValue = parseInt(event.target.value, 10);
+
+          scope.$apply(function() {
+            scope.ngModel = moment(parseInt(event.target.value, 10)).toDate();
+          });
+
         });
         rangeInputElement.bind('mouseup', function(event) {
           adjusting = false;
-          scope.callback.call(this, parseInt(event.target.value));
+
         });
         scope.$watch('min', function(newValue, oldValue) {
           rangeInput.min = scope.min;
-          rangeInput.value = scope.min;
         });
         scope.$watch('max', function(newValue, oldValue) {
           rangeInput.max = scope.max;
