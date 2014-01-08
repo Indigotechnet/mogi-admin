@@ -1,0 +1,37 @@
+<div id="map" class="col-md-12" ng-controller="HomeCtrl">
+    <div class="row" style="position: relative;" ng-class="{ 'show-streams' : showStreams }">
+        <div class="map-action-bar">
+            <input ng-model="usersFilter" class="form-control" placeholder="Type to filter the map...">
+            <span class="input-group-addon btn btn-primary" ng-click="filterUsers();" style="background: #428bca;">
+                <i class="glyphicon glyphicon-search"></i>
+            </span>
+        </div>
+        <div ui-map="myMap" ui-options="mapOptions" class="map-canvas"></div>
+        <div class="stream-panel" ng-if="activeStreams.length > 0">
+                <div ng-repeat="stream in activeStreams">
+                    <h4>Streaming {{stream.userName}}</h4>
+
+                    <div><b>Status:</b> {{stream.status}}</div>
+                    <div ng-hide="stream.status !== 'streaming'">
+                        <div id="stream" class="stream-player" style="width: 480px; height: 360px;"></div>
+                    </div>
+
+                </div>
+            </div>
+        <div ui-map-info-window="userWindow" ng-show="currentUser">
+            <img ng-src="{{currentUser.picture}}" width="80"> <br>
+            <strong>{{currentUser.name}}</strong>
+
+            <a ng-click="goToProfile(currentUser)">View history</a>
+            <div style="width: 240px">
+                <p>Streaming: <strong ng-bind="streamingMessage"></strong></p>
+                <div class="btn-group">
+                    <a class="btn btn-primary" ng-click="requestStream(currentUser)"
+                    ng-if="!activeStreams[currentUser.userId]">Begin</a>
+                    <a class="btn btn-success" ng-if="activeStreams[currentUser.userId]"
+                    ng-click="stopStream(currentUser)">Stop</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

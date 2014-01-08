@@ -1,0 +1,48 @@
+<div class="row" ng-controller="AnalyticsCtrl">
+    <div class="col-md-4">
+        <div class="input-group">
+            <label for="">User:</label>
+            <input type="text" class="form-control" ng-model="search.user">
+        </div>
+        <div class="input-group">
+            <label for="">Date:</label>
+            <input datepicker-popup="dd-MM-yyyy" type="text" class="form-control" ng-model="search.date">
+        </div>
+        <div class="input-group">
+            <label for="">Group:</label>
+            <input type="text" class="form-control" ng-model="search.group">
+        </div>
+
+        <div class="input-group" style="margin-top: 8px">
+            <button ng-click="search()" class="btn btn-primary">Filter</button>
+        </div>
+    </div>
+    <div class="col-md-8">
+
+        <span ng-show="searchDate && results.length > 0">Users in {{searchDate}}</span>
+
+        <table class="table table-stripped">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Name</th>
+                    <th>Group</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="result in results" ng-click="goToUser(result)">
+                    <td>{{result.username}}</td>
+                    <td>{{result.name}}</td>
+                    <td>{{result.group}}
+                    <td>
+                        <div class="btn-group">
+                            <a class="btn btn-default">
+                                <span class="glyphicon glyphicon-circle-arrow-right"></span>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

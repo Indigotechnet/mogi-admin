@@ -1,0 +1,7 @@
+<form class="form-signin" >
+    <h2 class="form-signin-heading">Project Mogi</h2>
+    <span ng-if="errorMessage" class="alert">Error: {{$scope.errorMessage}}</span>
+    <input type="text" class="form-control" placeholder="Username" ng-model="$parent.username" autofocus >
+    <input type="password" class="form-control" placeholder="Password" ng-model="$parent.password">
+    <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="login()">Sign in</button>
+</form>
