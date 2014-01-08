@@ -5,8 +5,11 @@
 */
 angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $routeParams, $http, ServerUrl){
   var userId = $routeParams.id,
-      currentPositionMarker = null,
+      currentPositionMarker = new google.maps.Marker({
+        position : new google.maps.LatLng(0,0)
+      }),
       video = angular.element(document.getElementById('video'));
+
   $scope.videos = [];
   $scope.locations = [];
   $scope.currentVideo = null;
@@ -44,9 +47,6 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
           $scope.skipTime();
         }
       });
-    currentPositionMarker = new google.maps.Marker({
-      position : new google.maps.LatLng(0,0)
-    });
 
     $http.get(ServerUrl + '/users/' + userId + '/locations/' + date )
       .success(function(data) {
