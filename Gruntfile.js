@@ -14,22 +14,10 @@ module.exports = function (grunt) {
   grunt.initConfig({
     connect: {
       main: {
-        proxies : [
-        {
-            context: '/api',
-            host: 'localhost',
-            port: 3000,
-            https: false,
-            changeOrigin: false,
-            xforward: false
-        }],
         options: {
           port: 9001,
           middleware: function(connect, options) {
-            var middlewares = [folderMount(connect, options.base)];
-            var proxySnippet = require('grunt-connect-proxy/lib/utils').proxyRequest;
-            middlewares.push(require('grunt-connect-proxy/lib/utils').proxyRequest);
-            return middlewares;
+            return [folderMount(connect, options.base)]
           }
         }
       }
@@ -56,7 +44,7 @@ module.exports = function (grunt) {
       after: {
         src:['temp']
       }
-    }, 
+    },
     less: {
       production: {
         options: {
@@ -65,7 +53,7 @@ module.exports = function (grunt) {
           "temp/app.css": "css/app.less"
         }
       }
-    },         
+    },
     ngtemplates: {
       main: {
         options: {
@@ -81,7 +69,7 @@ module.exports = function (grunt) {
               removeStyleLinkTypeAttributes: true
             }
         },
-        src: [ 'partial/**/*.html','directive/**/*.html', 'service/**/*.tpl.html' ],
+        src: [ 'partial/**/*.html','directive/**/*.html' ],
         dest: 'temp/templates.js'
       }
     },
@@ -198,6 +186,6 @@ module.exports = function (grunt) {
   });
 
   grunt.registerTask('build',['jshint','clean:before','less','dom_munger:readcss','dom_munger:readscripts','ngtemplates','cssmin','concat','ngmin','uglify','copy','dom_munger:removecss','dom_munger:addcss','dom_munger:removescripts','dom_munger:addscript','htmlmin','imagemin','clean:after']);
-  grunt.registerTask('server', ['jshint','configureProxies:main', 'connect', 'watch']);
+  grunt.registerTask('server', ['jshint','connect', 'watch']);
   grunt.registerTask('test',['dom_munger:readscripts','jasmine'])
 };
