@@ -107,7 +107,7 @@ module.exports = function (grunt) {
       },
       addscript: {
         options:{
-          append:{selector:'body',html:'<script src="app.full.min.js"></script>'}
+          prepend:{selector:'body',html:'<script src="app.full.min.js"></script>'}
         },
         src:'dist/index.html'
       },
