@@ -32,7 +32,7 @@
   <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
   <script src="bower_components/angular-http-auth/src/http-auth-interceptor.js"></script>
   <script src="bower_components/moment/min/moment.min.js"></script>
-  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=visualization&callback=onGoogleReady" data-build="exclude" ></script>
+  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=visualization&callback=onGoogleReady" data-build="exclude" data-remove="exclude" ></script>
 
   <!-- Main App JS -->
   <script src="js/setup.js"></script>
@@ -68,12 +68,12 @@
     </div>
     <div id="content" class="container">
         <div ng-view>
-          Carregando painel de controle...
+          Loading control panel....
         </div>
     </div>
   </div>
 
-  <script data-build="exclude">
+  <script data-build="exclude" data-remove="exclude">
   window.onGoogleReady = function() {
     angular.bootstrap(document.body, ['mogi-admin']);
   };
