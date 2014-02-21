@@ -112,7 +112,15 @@ angular.module('mogi-admin').controller('HomeCtrl',function($scope, $http, socke
   $scope.refreshUsers = function() {
     $http.get(ServerUrl + '/users/online')
       .success(function(data) {
-        $scope.activeUsers = data;
+        var bounds = new google.maps.LatLngBounds();
+
+        angular.forEach(data, function(user) {
+            loadUser(user);
+            var coord = new google.maps.LatLng(user.lat, user.lng);
+            bounds.extend(coord);
+        });
+
+        $scope.myMap.fitBounds(bounds);
       });
   };
 

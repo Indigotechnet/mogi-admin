@@ -3,7 +3,7 @@ angular.module('mogi-admin')
 
   var loginService = {},
       modal = null,
-      token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5MzViMWNlMC03N2ZkLTExZTMtYmU5Zi0yOTQxOGI4MWU1YTgiLCJleHAiOjYwMDEzODkxNDE2MTMzODh9.DWEoHYK-7a9m6iSrrgBw2YXDTyqUPabHZ94593jwIds';
+      token = '';
 
   loginService.show = function() {
     if ( !modal ) {
