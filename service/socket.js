@@ -15,15 +15,13 @@ angular.module('mogi-admin').factory('socket',function(ServerUrl) {
 
   socket.connect = function(token) {
     if ( typeof io === 'undefined' ) {
-      tag.onload = function() {
-        socket.connect(token);
-      };
       return;
     }
 
     socketIo = io.connect(ServerUrl, { query : 'token=' + token });
     socketIo.on('connect', function() {
       connected = true;
+      console.log("socket connected!");
       angular.forEach(onConnect, function(cb) {
         cb();
       });

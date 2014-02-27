@@ -17,6 +17,7 @@ angular.module('mogi-admin').controller('HomeCtrl',function($scope, $http, socke
   };
 
   var loadUser = function (data) {
+    console.log("Socket: Location received!");
     if ( $scope.activeUsers[data.id] ) {
       $scope.activeUsers[data.id]
         .marker.setPosition(new google.maps.LatLng(data.lat, data.lng));

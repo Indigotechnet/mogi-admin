@@ -17,25 +17,25 @@ angular.module('mogi-admin')
 
 angular.module('mogi-admin').run(function($rootScope, loginService, socket) {
 
-  $rootScope.$on("event:auth-loginRequired", function(data) {
-    loginService.show();
-  });
+    $rootScope.$on("event:auth-loginRequired", function(data) {
+        loginService.show();
+    });
 
-  if ( !loginService.isAuthenticated() ) {
-    loginService.show();
-  } else {
+    if ( !loginService.isAuthenticated() ) {
+        loginService.show();
+    } else {
     socket.connect(loginService.getToken());
-  }
+    }
 
-	$rootScope.safeApply = function(fn) {
-		var phase = $rootScope.$$phase;
-		if (phase === '$apply' || phase === '$digest') {
-			if (fn && (typeof(fn) === 'function')) {
-				fn();
-			}
-		} else {
-			this.$apply(fn);
-		}
-	};
+    $rootScope.safeApply = function(fn) {
+        var phase = $rootScope.$$phase;
+        if (phase === '$apply' || phase === '$digest') {
+            if (fn && (typeof(fn) === 'function')) {
+                fn();
+            }
+        } else {
+            this.$apply(fn);
+        }
+    };
 
 });
