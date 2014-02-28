@@ -174,15 +174,15 @@ module.exports = function (grunt) {
           dest: 'dist/'
         }]
       }
-    },
-    jasmine: {
-      unit: {
-        src: ['<%= dom_munger.data.appjs %>','bower_components/angular-mocks/angular-mocks.js'],
-        options: {
-          specs: 'test/unit/**/*.js'
-        }
-      }
     }
+//    , jasmine: {
+//      unit: {
+//        src: ['<%= dom_munger.data.appjs %>','bower_components/angular-mocks/angular-mocks.js'],
+//        options: {
+//          specs: 'test/unit/**/*.js'
+//        }
+//      }
+//    }
   });
 
   grunt.registerTask('build',['jshint','clean:before','less','dom_munger:readcss','dom_munger:readscripts','ngtemplates','cssmin','concat','ngmin','uglify','copy','dom_munger:removecss','dom_munger:addcss','dom_munger:removescripts','dom_munger:addscript','htmlmin','imagemin','clean:after']);
