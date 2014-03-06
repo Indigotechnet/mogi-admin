@@ -3,7 +3,7 @@ angular.module('mogi-admin').controller('HomeCtrl',function($scope, $http, socke
 
   $scope.mapOptions = {
     center: new google.maps.LatLng(0,0),
-    zoom: 5,
+    zoom: 11,
     mapTypeId: google.maps.MapTypeId.ROADMAP
   };
 
@@ -18,13 +18,15 @@ angular.module('mogi-admin').controller('HomeCtrl',function($scope, $http, socke
 
   var loadUser = function (data) {
     console.log("Socket: Location received!");
+    var pos = null, bounds = new google.maps.LatLngBounds();
     if ( $scope.activeUsers[data.id] ) {
-      $scope.activeUsers[data.id]
-        .marker.setPosition(new google.maps.LatLng(data.lat, data.lng));
+      pos = new google.maps.LatLng(data.lat, data.lng);
+      $scope.activeUsers[data.id].marker.setPosition(pos);
     } else {
+      pos = new google.maps.LatLng(data.lat, data.lng);
       var marker = new google.maps.Marker({
         map: $scope.myMap,
-        position: new google.maps.LatLng(data.lat, data.lng)
+        position: pos
       });
 
       google.maps.event.addListener(marker, 'click', function() {
@@ -34,11 +36,18 @@ angular.module('mogi-admin').controller('HomeCtrl',function($scope, $http, socke
 
       $scope.activeUsers[data.id] = {
         id : data.id,
-        name : data.name,
+        userName : data.name,
         deploymentGroup : data.deploymentGroup,
         marker : marker
       };
+
     }
+
+    for (key in $scope.activeUsers){
+       bounds.extend($scope.activeUsers[key].marker.getPosition())
+    }
+    $scope.myMap.fitBounds(bounds);
+
   };
 
   socket.on('connect', function() {
@@ -64,7 +73,7 @@ angular.module('mogi-admin').controller('HomeCtrl',function($scope, $http, socke
       if ( $scope.usersFilter.length === 0 ||
           user.deploymentGroup.indexOf($scope.usersFilter) > -1 ||
           user.userId.indexOf($scope.usersFilter) > -1 ||
-          user.name.indexOf($scope.usersFilter) > -1
+          user.userName.indexOf($scope.usersFilter) > -1
       ) {
         user.marker.setMap($scope.myMap);
       } else {

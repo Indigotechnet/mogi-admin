@@ -9,7 +9,7 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
         position : new google.maps.LatLng(0,0)
       }),
       video = angular.element(document.getElementById('video'));
-
+  var heatmap = null;
   $scope.videos = [];
   $scope.locations = [];
   $scope.currentVideo = null;
@@ -51,7 +51,22 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
     $http.get(ServerUrl + '/users/' + userId + '/locations/' + date )
       .success(function(data) {
         $scope.locations = data;
+        if (data == undefined || data.length == 0 ){
 
+            if(!!navigator.geolocation) {
+
+                navigator.geolocation.getCurrentPosition(function(position) {
+
+                    var geolocate = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
+                    $scope.locationMap.setCenter(geolocate);
+                    if (heatmap != null){
+                        heatmap.setMap(null);
+                    }
+                });
+            }
+            return;
+        }
         var pos = new google.maps.LatLng(data[0].lat, data[0].lng);
         currentPositionMarker.setPosition(pos);
         currentPositionMarker.setMap($scope.locationMap);
@@ -63,9 +78,13 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
           path.push(coord);
           bounds.extend(coord);
         });
-        var heatmap = new google.maps.visualization.HeatmapLayer({
-          data: path
-        });
+        if (heatmap == null){
+            heatmap = new google.maps.visualization.HeatmapLayer({
+              data: path
+            });
+        } else {
+            heatmap.setData(path);
+        }
         heatmap.setMap($scope.locationMap);
         $scope.locationMap.fitBounds(bounds);
         $scope.locationMap.setCenter(pos);
