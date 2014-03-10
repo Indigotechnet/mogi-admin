@@ -50,9 +50,9 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
 
     $http.get(ServerUrl + '/users/' + userId + '/locations/' + date )
       .success(function(data) {
-        $scope.locations = data;
-        if (data == undefined || data.length == 0 ){
 
+        if (data == undefined || data.length == 0 ){
+            $scope.locations = [];
             if(!!navigator.geolocation) {
 
                 navigator.geolocation.getCurrentPosition(function(position) {
@@ -67,13 +67,14 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
             }
             return;
         }
-        var pos = new google.maps.LatLng(data[0].lat, data[0].lng);
+        $scope.locations = data;
+        var pos = new google.maps.LatLng($scope.locations[0].lat, $scope.locations[0].lng);
         currentPositionMarker.setPosition(pos);
         currentPositionMarker.setMap($scope.locationMap);
 
         var path = [];
         var bounds = new google.maps.LatLngBounds();
-        angular.forEach(data, function(loc) {
+        angular.forEach($scope.locations, function(loc) {
           var coord = new google.maps.LatLng(loc.lat, loc.lng);
           path.push(coord);
           bounds.extend(coord);
