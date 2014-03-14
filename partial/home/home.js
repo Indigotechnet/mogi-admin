@@ -1,6 +1,7 @@
 /* global google, flowplayer */
 angular.module('mogi-admin').controller('HomeCtrl',function($scope, $http, socket, ServerUrl){
-
+    $scope.windowHeight = window.innerHeight;
+    $scope.windowWidth = window.innerWidth;
   $scope.mapOptions = {
     center: new google.maps.LatLng(0,0),
     zoom: 11,
@@ -43,8 +44,8 @@ angular.module('mogi-admin').controller('HomeCtrl',function($scope, $http, socke
 
     }
 
-    for (key in $scope.activeUsers){
-       bounds.extend($scope.activeUsers[key].marker.getPosition())
+    for (var key in $scope.activeUsers){
+       bounds.extend($scope.activeUsers[key].marker.getPosition());
     }
     $scope.myMap.fitBounds(bounds);
 
@@ -168,5 +169,22 @@ angular.module('mogi-admin').controller('HomeCtrl',function($scope, $http, socke
     });
   }
 
+  function onWindowResize(){
+
+  }
+
   $scope.refreshUsers();
-});
+}).directive('mogiResizable', function($window) {
+        return function($scope) {
+            $scope.initializeWindowSize = function() {
+                $scope.windowHeight = $window.innerHeight;
+                $scope.windowWidth = $window.innerWidth;
+                return google.maps.event.trigger($scope.myMap,'resize');
+            };
+            $scope.initializeWindowSize();
+            return angular.element($window).bind('resize', function() {
+                $scope.initializeWindowSize();
+                return $scope.$apply();
+            });
+        };
+    });

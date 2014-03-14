@@ -1,23 +1,25 @@
-<div class="col-md-12" ng-controller="AnalyticsUserCtrl">
-    <div class="row" style="margin-bottom: 18px;">
-        <div class="col-md-1">Date: </div>
-        <div class="col-md-2"><input datepicker-popup="yyyy-MM-dd" type="text" class="form-control" ng-model="currentDate"></div>
-        <div class="col-md-2"><button class="btn btn-primary btn-s" ng-click="loadData()">Search</div>
-    </div>
-    <div class="row" style="margin-bottom: 18px;" ng-show="videos.length || locations.length">
-        <div class="col-md-1">Time:</div>
-        <div class="col-md-10">
-          <span class="current-time" ng-bind="currentDate | date : 'HH:mm:ss' "></span>
-          <time-slider min="sliderFrom" max="sliderTo" ng-model="currentDate" step="100"></time-slider>
+<div class="containerAnalytics">
+    <div class="col-md-12" ng-controller="AnalyticsUserCtrl">
+        <div class="row" style="margin-bottom: 18px;">
+            <div class="col-md-1">Date: </div>
+            <div class="col-md-2"><input datepicker-popup="yyyy-MM-dd" type="text" class="form-control" ng-model="currentDate"></div>
+            <div class="col-md-2"><button class="btn btn-primary btn-s" ng-click="loadData()">Search</div>
         </div>
-    </div>
+        <div class="row" style="margin-bottom: 18px;" ng-show="videos.length || locations.length">
+            <div class="col-md-1">Time:</div>
+            <div class="col-md-10">
+              <span class="current-time" ng-bind="currentDate | date : 'HH:mm:ss' "></span>
+              <time-slider min="sliderFrom" max="sliderTo" ng-model="currentDate" step="100"></time-slider>
+            </div>
+        </div>
 
-    <div class="row">
-        <div class="col-md-6">
-            <div ui-map="locationMap" ui-options="mapOptions" class="map-canvas"></div>
-        </div>
-        <div class="col-md-6">
-            <video id="video" ng-click="video()" controls ng-src="{{ currentVideo.src }}" style="width: 100%; height: 400px;"></video>
+        <div class="row">
+            <div class="col-md-6">
+                <div ui-map="locationMap" ui-options="mapOptions" class="map-canvas"></div>
+            </div>
+            <div class="col-md-6">
+                <video id="video" ng-click="video()" controls ng-src="{{ currentVideo.src }}" style="width: 100%; height: 400px;"></video>
+            </div>
         </div>
     </div>
 </div>

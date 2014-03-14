@@ -51,7 +51,7 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
     $http.get(ServerUrl + '/users/' + userId + '/locations/' + date )
       .success(function(data) {
 
-        if (data == undefined || data.length == 0 ){
+        if (data === undefined || data.length === 0 ){
             $scope.locations = [];
             if(!!navigator.geolocation) {
 
