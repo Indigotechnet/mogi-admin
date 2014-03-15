@@ -19,12 +19,13 @@ angular.module('mogi-admin').controller('HomeCtrl',function($scope, $http, socke
 
   var loadUser = function (data) {
     console.log("Socket: Location received!");
-    var pos = null, bounds = new google.maps.LatLngBounds();
+    var pos = null;
     if ( $scope.activeUsers[data.id] ) {
       pos = new google.maps.LatLng(data.lat, data.lng);
       $scope.activeUsers[data.id].marker.setPosition(pos);
     } else {
       pos = new google.maps.LatLng(data.lat, data.lng);
+      var bounds = new google.maps.LatLngBounds();
       var marker = new google.maps.Marker({
         map: $scope.myMap,
         position: pos
@@ -38,17 +39,14 @@ angular.module('mogi-admin').controller('HomeCtrl',function($scope, $http, socke
       $scope.activeUsers[data.id] = {
         id : data.id,
         userName : data.name,
-        deploymentGroup : data.deploymentGroup,
+        deploymentGroup : data.group,
         marker : marker
       };
-
+      for (var key in $scope.activeUsers){
+          bounds.extend($scope.activeUsers[key].marker.getPosition());
+      }
+      $scope.myMap.fitBounds(bounds);
     }
-
-    for (var key in $scope.activeUsers){
-       bounds.extend($scope.activeUsers[key].marker.getPosition());
-    }
-    $scope.myMap.fitBounds(bounds);
-
   };
 
   socket.on('connect', function() {
