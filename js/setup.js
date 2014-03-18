@@ -1,6 +1,6 @@
 angular.module('mogi-admin', ['ngRoute','ngAnimate','ui.bootstrap','ui','ui.map','http-auth-interceptor']);
 
-angular.module('mogi-admin').constant('ServerUrl', 'http://projectmogi.com');
+angular.module('mogi-admin').constant('ServerUrl', 'http://localhost:3000');
 
 angular.module('mogi-admin')
 .config(function($routeProvider) {
@@ -10,8 +10,11 @@ angular.module('mogi-admin')
 	  when('/analytics',{templateUrl: 'partial/analytics/analytics.html'}).
 	  when('/analytics/:id',{templateUrl: 'partial/analyticsUser/analyticsUser.html'}).
 	  /* Add New Routes Above */
-    when('/analytics/:id/date/:date',{templateUrl: 'partial/analyticsUser/analyticsUser.html'}).
-    otherwise({redirectTo:'/'});
+      when('/analytics/:id/date/:date',{templateUrl: 'partial/analyticsUser/analyticsUser.html'}).
+      when('/user-list', {templateUrl: 'partial/users/user-list.html', controller: 'UserListCtrl'}).
+      when('/user-detail/:id', {templateUrl: 'partial/users/user-detail.html', controller: 'UserDetailCtrl'}).
+      when('/user-creation', {templateUrl: 'partial/users/user-creation.html', controller: 'UserCreationCtrl'}).
+      otherwise({redirectTo:'/'});
 
 });
 
@@ -24,7 +27,7 @@ angular.module('mogi-admin').run(function($rootScope, loginService, socket) {
     if ( !loginService.isAuthenticated() ) {
         loginService.show();
     } else {
-    socket.connect(loginService.getToken());
+        socket.connect(loginService.getToken());
     }
 
     $rootScope.safeApply = function(fn) {

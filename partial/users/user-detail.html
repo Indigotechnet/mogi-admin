@@ -1,0 +1,50 @@
+<div class="container">
+    <h1>User detail</h1>
+
+    <form novalidate="novalidate" class="form-horizontal">
+        <alert ng-show="serverMessage">
+            <li ng-repeat="(key, value) in serverMessage">
+                    {{value[0]}}
+            </li>
+        </alert>
+        <div class="control-group">
+            <label class="control-label" for="inputName">Name:</label>
+            <div class="controls">
+                <input type="text" id="inputName" ng-model="user.name"/>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="inputName">Group:</label>
+            <div class="controls">
+                <select ng-options="group.id as group.name for group in groups" ng-model="user.groupId" >
+                </select>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="inputUsername">Username:</label>
+            <div class="controls">
+                <input type="text" id="inputUsername" ng-model="user.username"/>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="inputEmail">Email:</label>
+            <div class="controls">
+                <input type="text" id="inputEmail" ng-model="user.email"/>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="inputIsAdmin">Is Admin?</label>
+            <div class="controls">
+                <input type="checkbox" id="inputIsAdmin" ng-model="user.isAdmin"/>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <!-- user-detail.html: -->
+                <a ng-click="cancel()" class="btn btn-small">cancel</a>
+                <a ng-click="updateUser()" class="btn btn-small btn-primary">update user</a>
+
+            </div>
+        </div>
+    </form>
+</div>

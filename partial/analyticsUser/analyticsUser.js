@@ -73,20 +73,34 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
         currentPositionMarker.setMap($scope.locationMap);
 
         var path = [];
-        var bounds = new google.maps.LatLngBounds();
+        var bounds = new google.maps.LatLngBounds(), coordLast = null;
         angular.forEach($scope.locations, function(loc) {
-          var coord = new google.maps.LatLng(loc.lat, loc.lng);
-          path.push(coord);
-          bounds.extend(coord);
+            var coord = new google.maps.LatLng(loc.lat, loc.lng);
+//            var marker = new google.maps.Marker({
+//                map: $scope.locationMap,
+//                position: coord
+//            });
+            if (coordLast != null){
+                var rulerpoly = new google.maps.Polyline({
+                    path: [coordLast, coord] ,
+                    strokeColor: "#FFFF00",
+                    strokeOpacity: 0.7,
+                    strokeWeight: 8
+                });
+                rulerpoly.setMap($scope.locationMap);
+            }
+            path.push(coord);
+            bounds.extend(coord);
+            coordLast = coord;
         });
-        if (heatmap == null){
-            heatmap = new google.maps.visualization.HeatmapLayer({
-              data: path
-            });
-        } else {
-            heatmap.setData(path);
-        }
-        heatmap.setMap($scope.locationMap);
+//        if (heatmap == null){
+//            heatmap = new google.maps.visualization.HeatmapLayer({
+//              data: path
+//            });
+//        } else {
+//            heatmap.setData(path);
+//        }
+//        heatmap.setMap($scope.locationMap);
         $scope.locationMap.fitBounds(bounds);
         $scope.locationMap.setCenter(pos);
       });
