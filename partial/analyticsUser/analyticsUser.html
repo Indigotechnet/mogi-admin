@@ -9,7 +9,9 @@
             <div class="col-md-1">Time:</div>
             <div class="col-md-10">
               <span class="current-time" ng-bind="currentDate | date : 'HH:mm:ss' "></span>
-              <time-slider min="sliderFrom" max="sliderTo" ng-model="currentDate" step="100"></time-slider>
+              <time-slider min="sliderFrom" max="sliderTo" class="timeSlider" ng-model="currentDate" step="500"></time-slider>
+              <input type="radio" ng-model="currentMap" value="HEATMAP" ng-change='changeMap()'/> Heatmap
+              <input type="radio" ng-model="currentMap" value="PATH" ng-change='changeMap()'/>  Path
             </div>
         </div>
 

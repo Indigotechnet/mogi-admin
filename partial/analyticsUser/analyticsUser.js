@@ -8,8 +8,46 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
       currentPositionMarker = new google.maps.Marker({
         position : new google.maps.LatLng(0,0)
       }),
-      video = angular.element(document.getElementById('video'));
-  var heatmap = null;
+    HEATMAP_OPT = "HEATMAP",
+    video = angular.element(document.getElementById('video')),
+    heatmap = null, pathmap = null;
+
+
+    function changeMap() {
+        var path = [];
+        var bounds = new google.maps.LatLngBounds();
+        angular.forEach($scope.locations, function(loc) {
+            var coord = new google.maps.LatLng(loc.lat, loc.lng);
+            path.push(coord);
+            bounds.extend(coord);
+        });
+        if ($scope.currentMap === HEATMAP_OPT){
+            if (pathmap != null){
+                pathmap.setMap(null);
+            }
+            if (heatmap == null){
+                heatmap = new google.maps.visualization.HeatmapLayer({
+                    data: path
+                });
+            } else {
+                heatmap.setData(path);
+            }
+            heatmap.setMap($scope.locationMap);
+        } else {
+            heatmap.setMap(null);
+            if (pathmap == null){
+                pathmap = new google.maps.Polyline({
+                    path: path ,
+                    strokeColor: '#428bca',
+                    strokeOpacity: 1.0,
+                    strokeWeight: 2
+                });
+            }
+            pathmap.setMap($scope.locationMap);
+        }
+        $scope.locationMap.fitBounds(bounds);
+        $scope.locationMap.setCenter(currentPositionMarker.getPosition());
+    }
   $scope.videos = [];
   $scope.locations = [];
   $scope.currentVideo = null;
@@ -67,44 +105,19 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
             }
             return;
         }
+
+        $scope.currentMap = HEATMAP_OPT;
+
         $scope.locations = data;
         var pos = new google.maps.LatLng($scope.locations[0].lat, $scope.locations[0].lng);
         currentPositionMarker.setPosition(pos);
         currentPositionMarker.setMap($scope.locationMap);
 
-        var path = [];
-        var bounds = new google.maps.LatLngBounds(), coordLast = null;
-        angular.forEach($scope.locations, function(loc) {
-            var coord = new google.maps.LatLng(loc.lat, loc.lng);
-//            var marker = new google.maps.Marker({
-//                map: $scope.locationMap,
-//                position: coord
-//            });
-            if (coordLast != null){
-                var rulerpoly = new google.maps.Polyline({
-                    path: [coordLast, coord] ,
-                    strokeColor: "#FFFF00",
-                    strokeOpacity: 0.7,
-                    strokeWeight: 8
-                });
-                rulerpoly.setMap($scope.locationMap);
-            }
-            path.push(coord);
-            bounds.extend(coord);
-            coordLast = coord;
-        });
-//        if (heatmap == null){
-//            heatmap = new google.maps.visualization.HeatmapLayer({
-//              data: path
-//            });
-//        } else {
-//            heatmap.setData(path);
-//        }
-//        heatmap.setMap($scope.locationMap);
-        $scope.locationMap.fitBounds(bounds);
-        $scope.locationMap.setCenter(pos);
+        changeMap();
       });
   };
+
+  $scope.changeMap = changeMap;
 
   $scope.showVideo = function(video) {
     $scope.currentVideo = video;
