@@ -3,15 +3,19 @@
 * The video element handled here is not Angular-Way. I was in doubt of creating a directive from the video tag but so far
 * I'll keep like this. The same applies to the flowplayer in the live map.
 */
+
 angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $routeParams, $http, ServerUrl){
   var userId = $routeParams.id,
       currentPositionMarker = new google.maps.Marker({
         position : new google.maps.LatLng(0,0)
       }),
     HEATMAP_OPT = "HEATMAP",
-    video = angular.element(document.getElementById('video')),
+    videoElement = document.getElementById('video'),
     heatmap = null, pathmap = null;
 
+    function getVideoUrl(ServerUrl, userId, $scope) {
+        return ServerUrl + '/users/' + userId + '/videos/' + $scope.currentVideo.id + '.mp4';
+    }
 
     function changeMap() {
         var path = [];
@@ -76,12 +80,12 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
 
   $scope.loadData = function() {
     var date = moment($scope.currentDate).format('YYYY-MM-DD');
+    $scope.sliderFrom = moment($scope.currentDate).hour(0).minute(0).seconds(0).valueOf();
+    $scope.sliderTo = moment($scope.currentDate).hour(23).minute(59).seconds(59).valueOf();
     $http.get(ServerUrl + '/users/' + userId + '/videos/from/' + date )
       .success(function(data) {
         $scope.videos = data;
         if ( $scope.videos.length > 0 ) {
-          $scope.currentVideo = $scope.videos[0];
-          $scope.currentDate = $scope.videos[0].from;
           $scope.skipTime();
         }
       });
@@ -121,16 +125,28 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
 
   $scope.showVideo = function(video) {
     $scope.currentVideo = video;
+    $scope.currentVideo.src = getVideoUrl(ServerUrl, userId, $scope);
   };
+
+
 
   $scope.skipTime = function() {
     var isoDate = moment($scope.currentDate).toISOString(), location;
     var video = _.find($scope.videos, function (video) {
-      return isoDate >= video.from && isoDate <= video.to;
+        var formatDate = Date.parse(isoDate);
+        return formatDate >= Date.parse(video.from) && formatDate <= Date.parse(video.to);
     });
 
     if ( video ) {
       $scope.currentVideo = video;
+      $scope.currentVideo.src = getVideoUrl(ServerUrl, userId, $scope);
+    } else {
+
+      videoElement.pause();
+      videoElement.src = '';
+      angular.element(videoElement).children('source').prop('src', '');
+      $scope.currentVideo = {};
+      $scope.currentVideo.src = null;
     }
 
     _.some($scope.locations, function(loc) {
@@ -149,16 +165,16 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
     }
   };
 
-  var isPlaying = false;
-
-  video
-    .on('play', function() {
-      isPlaying = true;
-    }).on('pause', function() {
-      isPlaying = false;
-    }).on('timeupdate', function(ev) {
-      console.log(ev);
-    });
+//  var isPlaying = false;
+//
+//  videoElement
+//    .on('play', function() {
+//      isPlaying = true;
+//    }).on('pause', function() {
+//      isPlaying = false;
+//    }).on('timeupdate', function(ev) {
+//      console.log(ev);
+//    });
   if ($routeParams.date) {
     $scope.loadData();
   }
