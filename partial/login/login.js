@@ -41,7 +41,7 @@ angular.module('mogi-admin')
       password : $scope.password,
       scope : 'admin'
     }).success(function(token) {
-      loginService.setToken(token);
+      loginService.setToken(token.token);
       $modalInstance.close();
     }).error(function (data) {
       $scope.errorMessage = data.message;

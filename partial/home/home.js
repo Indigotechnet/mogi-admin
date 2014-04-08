@@ -93,7 +93,7 @@ angular.module('mogi-admin').controller('HomeCtrl',function($scope, $http, socke
 
   $scope.requestStream = function(user) {
     $scope.streamingMessage = 'Sending request';
-    $http.post(ServerUrl + '/streams/' + user.id + '/start')
+    $http.get(ServerUrl + '/streams/' + user.id + '/start')
       .success(function(data) {
         $scope.streamingMessage = 'Request sent.';
         $scope.activeStreams[user.id] = {
