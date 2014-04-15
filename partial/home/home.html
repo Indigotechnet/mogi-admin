@@ -8,16 +8,16 @@
         </div>
         <div ui-map="myMap" mogi-resizable ng-style="{ width: windowWidth, height: windowHeight }" ui-options="mapOptions" class="map-canvas"></div>
         <div class="stream-panel" ng-if="activeStreams.length > 0">
-                <div ng-repeat="stream in activeStreams">
-                    <h4>Streaming {{stream.userName}}</h4>
+            <div ng-repeat="stream in activeStreams">
+                <h4>Streaming {{stream.userName}}</h4>
 
-                    <div><b>Status:</b> {{stream.status}}</div>
-                    <div ng-hide="stream.status !== 'streaming'">
-                        <div id="stream" class="stream-player" style="width: 480px; height: 360px;"></div>
-                    </div>
-
+                <div><b>Status:</b> {{stream.status}}</div>
+                <div ng-hide="stream.status !== 'streaming'">
+                    <div id="stream" class="stream-player" style="width: 480px; height: 360px;"></div>
                 </div>
+
             </div>
+        </div>
         <div ui-map-info-window="userWindow" ng-show="currentUser">
             <img ng-src="{{currentUser.picture}}" width="80"> <br>
             <strong>{{currentUser.userName}}</strong>

@@ -1,9 +1,3 @@
-/* global google, moment */
-/*
-* The video element handled here is not Angular-Way. I was in doubt of creating a directive from the video tag but so far
-* I'll keep like this. The same applies to the flowplayer in the live map.
-*/
-
 angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $routeParams, $http, ServerUrl){
   var userId = $routeParams.id,
       currentPositionMarker = new google.maps.Marker({
@@ -165,16 +159,6 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
     }
   };
 
-//  var isPlaying = false;
-//
-//  videoElement
-//    .on('play', function() {
-//      isPlaying = true;
-//    }).on('pause', function() {
-//      isPlaying = false;
-//    }).on('timeupdate', function(ev) {
-//      console.log(ev);
-//    });
   if ($routeParams.date) {
     $scope.loadData();
   }

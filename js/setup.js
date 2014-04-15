@@ -1,4 +1,4 @@
-angular.module('mogi-admin', ['ngRoute','ngAnimate','ui.bootstrap','ui','ui.map','http-auth-interceptor']);
+angular.module('mogi-admin', ['ngRoute','ngAnimate','ui.bootstrap','ui','ui.map','http-auth-interceptor', 'angular-jwplayer']);
 
 angular.module('mogi-admin').constant('ServerUrl', 'http://projectmogi.com');
 

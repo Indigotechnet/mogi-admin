@@ -1,5 +1,5 @@
-/* global google, flowplayer */
-angular.module('mogi-admin').controller('HomeCtrl',function($scope, $http, socket, ServerUrl){
+/* global google */
+angular.module('mogi-admin').controller('HomeCtrl',function($scope, $modal, $http, socket, ServerUrl){
     $scope.windowHeight = window.innerHeight;
     $scope.windowWidth = window.innerWidth;
   $scope.mapOptions = {
@@ -11,6 +11,8 @@ angular.module('mogi-admin').controller('HomeCtrl',function($scope, $http, socke
   $scope.activeUsers = {};
   $scope.activeStreams = {};
   $scope.currentUser = null;
+
+
 
   var markerIcons = {
     'red' : 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
@@ -48,6 +50,32 @@ angular.module('mogi-admin').controller('HomeCtrl',function($scope, $http, socke
       $scope.myMap.fitBounds(bounds);
     }
   };
+    var ModalInstanceCtrl = function ($scope, $modalInstance, user, streamUrl) {
+        $scope.user = user;
+        $scope.jwOptions = {
+            file: streamUrl,
+            height: 300,
+            width: "100%"
+
+        };
+
+        $scope.ok = function () {
+            $modalInstance.close();
+            stopUserStreaming(user);
+        };
+
+    };
+
+  var stopUserStreaming = function(user) {
+        $http.post(ServerUrl + '/streams/' + user.id + '/stop')
+            .success(function(data) {
+                if ( data.success ) {
+                    delete $scope.activeStreams[user.id];
+                }
+            }).error(function(data) {
+
+            });
+    };
 
   socket.on('connect', function() {
     socket.on('users:location', loadUser);
@@ -62,6 +90,7 @@ angular.module('mogi-admin').controller('HomeCtrl',function($scope, $http, socke
     socket.on('streaming:stop', function(data) {
       delete $scope.activeStreams[data.userId];
       $scope.activeUsers[data.userId].marker.setIcon(markerIcons['red']);
+      $close(result)
     });
   });
 
@@ -93,30 +122,30 @@ angular.module('mogi-admin').controller('HomeCtrl',function($scope, $http, socke
 
   $scope.requestStream = function(user) {
     $scope.streamingMessage = 'Sending request';
-    $http.get(ServerUrl + '/streams/' + user.id + '/start')
+    $http.post(ServerUrl + '/streams/' + user.id + '/start')
       .success(function(data) {
-        $scope.streamingMessage = 'Request sent.';
+        $scope.streamingMessage = data.message;
         $scope.activeStreams[user.id] = {
           status : 'waiting',
           streamId : user.id,
           userName : user.name
         };
+        var modalInstance = $modal.open({
+            templateUrl: 'partial/home/player.html',
+            controller: ModalInstanceCtrl,
+            backdrop: false,
+            resolve: {
+                user: function(){return user;},
+                streamUrl: function(){return data.streamUrl;}
+            }
+        });
       })
       .error(function(data) {
         $scope.streamingMessage = data.message;
       });
   };
 
-  $scope.stopStream = function(user) {
-    $http.post(ServerUrl + '/streams/' + user.id + '/stop')
-      .success(function(data) {
-        if ( data.success ) {
-          delete $scope.activeStreams[user.id];
-        }
-      }).error(function(data) {
-
-      });
-  };
+  $scope.stopStream = stopUserStreaming;
 
   $scope.refreshUsers = function() {
     $http.get(ServerUrl + '/users/online')
@@ -142,29 +171,6 @@ angular.module('mogi-admin').controller('HomeCtrl',function($scope, $http, socke
 
     user.marker.setIcon(markerIcons['green']);
 
-    flowplayer('stream', "/flowplayer/flowplayer-3.2.16.swf", {
-         clip: {
-            url: user.id + '.sdp',
-            scaling: 'fit',
-            // configure clip to use hddn as our provider, referring to our rtmp plugin
-            provider: 'rtmp'
-        },
-
-        // streaming plugins are configured under the plugins node
-        plugins: {
-
-            // here is our rtmp plugin configuration
-            rtmp: {
-                url: "/flowplayer/flowplayer.rtmp-3.2.12.swf",
-
-                // netConnectionUrl defines where the streams are found
-                netConnectionUrl: user.stream_server
-            }
-        },
-        canvas: {
-            backgroundGradient: 'none'
-        }
-    });
   }
 
   function onWindowResize(){
