@@ -6,7 +6,7 @@
                 <i class="glyphicon glyphicon-search"></i>
             </span>
         </div>
-        <div ui-map="myMap" mogi-resizable ng-style="{ width: windowWidth, height: windowHeight }" ui-options="mapOptions" class="map-canvas"></div>
+        <div ui-map="myMap" ui-options="mapOptions" ng-style="myStyle"></div>
         <div class="stream-panel" ng-if="activeStreams.length > 0">
             <div ng-repeat="stream in activeStreams">
                 <h4>Streaming {{stream.userName}}</h4>

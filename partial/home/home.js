@@ -8,11 +8,19 @@ angular.module('mogi-admin').controller('HomeCtrl',function($scope, $modal, $htt
     mapTypeId: google.maps.MapTypeId.ROADMAP
   };
 
+  $scope.myStyle = {
+    "height": "500px",
+    "width": "100%"
+  };
+
   $scope.activeUsers = {};
   $scope.activeStreams = {};
   $scope.currentUser = null;
 
-
+  angular.element(window).bind('resize',function(){
+      $scope.myStyle["height"] = (window.innerHeight - 50) + "px";
+      google.maps.event.trigger($scope.myMap, 'resize')
+  })
 
   var markerIcons = {
     'red' : 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
