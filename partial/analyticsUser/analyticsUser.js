@@ -1,3 +1,4 @@
+/* global google */
 angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $routeParams, $http, ServerUrl){
   var userId = $routeParams.id,
       currentPositionMarker = new google.maps.Marker({

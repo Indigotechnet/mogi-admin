@@ -1,4 +1,4 @@
-angular.module('mogi-admin', ['ngRoute','ngAnimate','ui.bootstrap','ui','ui.map','http-auth-interceptor', 'angular-jwplayer']);
+angular.module('mogi-admin', ['ngRoute','ngAnimate','ui.bootstrap','ui.map','http-auth-interceptor', 'angular-jwplayer']);
 
 angular.module('mogi-admin').constant('ServerUrl', 'http://projectmogi.com');
 
@@ -19,7 +19,6 @@ angular.module('mogi-admin')
 });
 
 angular.module('mogi-admin').run(function($rootScope, loginService, socket) {
-
     $rootScope.$on("event:auth-loginRequired", function(data) {
         loginService.show();
     });

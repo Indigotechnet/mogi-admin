@@ -1,5 +1,26 @@
 /* global google */
-angular.module('mogi-admin').controller('HomeCtrl',function($scope, $modal, $http, socket, ServerUrl){
+angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $modalInstance, $http, ServerUrl, user, streamUrl) {
+    console.log('contorller created');
+    $scope.user = user;
+    $scope.jwOptions = {
+        file: streamUrl,
+        height: 300,
+        width: "100%"
+
+    };
+
+    $scope.ok = function () {
+        $modalInstance.close();
+        $http.post(ServerUrl + '/streams/' + user.id + '/stop')
+            .success(function(data) {
+                if ( data.success ) {
+                    delete $scope.activeStreams[user.id];
+                }
+            }).error(function(data) {
+
+            });
+    };
+}).controller('HomeCtrl',function($scope, $modal, $http, socket, ServerUrl){
     $scope.windowHeight = window.innerHeight;
     $scope.windowWidth = window.innerWidth;
   $scope.mapOptions = {
@@ -9,7 +30,7 @@ angular.module('mogi-admin').controller('HomeCtrl',function($scope, $modal, $htt
   };
 
   $scope.myStyle = {
-    "height": "500px",
+    "height": (window.innerHeight - 50) + "px",
     "width": "100%"
   };
 
@@ -19,8 +40,8 @@ angular.module('mogi-admin').controller('HomeCtrl',function($scope, $modal, $htt
 
   angular.element(window).bind('resize',function(){
       $scope.myStyle["height"] = (window.innerHeight - 50) + "px";
-      google.maps.event.trigger($scope.myMap, 'resize')
-  })
+      google.maps.event.trigger($scope.myMap, 'resize');
+  });
 
   var markerIcons = {
     'red' : 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
@@ -58,32 +79,7 @@ angular.module('mogi-admin').controller('HomeCtrl',function($scope, $modal, $htt
       $scope.myMap.fitBounds(bounds);
     }
   };
-    var ModalInstanceCtrl = function ($scope, $modalInstance, user, streamUrl) {
-        $scope.user = user;
-        $scope.jwOptions = {
-            file: streamUrl,
-            height: 300,
-            width: "100%"
 
-        };
-
-        $scope.ok = function () {
-            $modalInstance.close();
-            stopUserStreaming(user);
-        };
-
-    };
-
-  var stopUserStreaming = function(user) {
-        $http.post(ServerUrl + '/streams/' + user.id + '/stop')
-            .success(function(data) {
-                if ( data.success ) {
-                    delete $scope.activeStreams[user.id];
-                }
-            }).error(function(data) {
-
-            });
-    };
 
   socket.on('connect', function() {
     socket.on('users:location', loadUser);
@@ -98,7 +94,6 @@ angular.module('mogi-admin').controller('HomeCtrl',function($scope, $modal, $htt
     socket.on('streaming:stop', function(data) {
       delete $scope.activeStreams[data.userId];
       $scope.activeUsers[data.userId].marker.setIcon(markerIcons['red']);
-      $close(result)
     });
   });
 
@@ -138,13 +133,15 @@ angular.module('mogi-admin').controller('HomeCtrl',function($scope, $modal, $htt
           streamId : user.id,
           userName : user.name
         };
-        var modalInstance = $modal.open({
+            console.log('creating modal');
+        $modal.open({
             templateUrl: 'partial/home/player.html',
-            controller: ModalInstanceCtrl,
+            controller: 'ModalInstanceCtrl',
             backdrop: false,
             resolve: {
                 user: function(){return user;},
-                streamUrl: function(){return data.streamUrl;}
+                streamUrl: function(){return data.streamUrl;},
+                ServerUrl: function(){return ServerUrl;}
             }
         });
       })
@@ -153,7 +150,16 @@ angular.module('mogi-admin').controller('HomeCtrl',function($scope, $modal, $htt
       });
   };
 
-  $scope.stopStream = stopUserStreaming;
+  $scope.stopStream = function(user){
+      $http.post(ServerUrl + '/streams/' + user.id + '/stop')
+      .success(function(data) {
+          if ( data.success ) {
+              delete $scope.activeStreams[user.id];
+          }
+      }).error(function(data) {
+
+      });
+  };
 
   $scope.refreshUsers = function() {
     $http.get(ServerUrl + '/users/online')
@@ -178,10 +184,6 @@ angular.module('mogi-admin').controller('HomeCtrl',function($scope, $modal, $htt
     };
 
     user.marker.setIcon(markerIcons['green']);
-
-  }
-
-  function onWindowResize(){
 
   }
 
