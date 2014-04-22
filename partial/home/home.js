@@ -1,6 +1,6 @@
 /* global google */
 angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $modalInstance, $http, ServerUrl, user, streamUrl) {
-    console.log('contorller created');
+    console.log('controller created: '+streamUrl);
     $scope.user = user;
     $scope.jwOptions = {
         file: streamUrl,
