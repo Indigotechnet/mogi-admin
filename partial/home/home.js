@@ -1,6 +1,6 @@
 /* global google */
 angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $modalInstance, $http, ServerUrl, user, streamUrl) {
-    console.log('controller created: '+streamUrl);
+    console.log('controller created: ' + streamUrl);
     $scope.user = user;
     $scope.jwOptions = {
         file: streamUrl,
@@ -12,15 +12,15 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
     $scope.ok = function () {
         $modalInstance.close();
         $http.post(ServerUrl + '/streams/' + user.id + '/stop')
-            .success(function(data) {
-                if ( data.success ) {
+            .success(function (data) {
+                if (data.success) {
                     delete $scope.activeStreams[user.id];
                 }
-            }).error(function(data) {
+            }).error(function (data) {
 
             });
     };
-}).controller('HomeCtrl',function($scope, $modal, $http, socket, ServerUrl){
+}).controller('HomeCtrl', function($scope, $modal, $http, socket, ServerUrl, toaster){
     $http.get(ServerUrl + '/users/me').success(function(data) {
         if(data.length === 0){
             return;
@@ -52,7 +52,7 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
   });
 
   var markerIcons = {
-    'red' : 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
+    'red' : 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
     'green' : 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
   };
 
@@ -79,7 +79,8 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
         id : data.id,
         userName : data.name,
         deploymentGroup : data.group,
-        marker : marker
+        marker : marker,
+        groupId: data.groupId
       };
       for (var key in $scope.activeUsers){
           bounds.extend($scope.activeUsers[key].marker.getPosition());
@@ -91,17 +92,26 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
 
   socket.on('connect', function() {
     socket.on('users:location', loadUser);
-    socket.on('streaming:start', function(data) {
-      var user = $scope.activeUsers[data.userId];
-      if ( ! user ) {
-        return console.log('Unable to find user for streaming');
-      }
 
-      showStream($scope.activeUsers[data.userId]);
+    socket.on('streaming:start', function(data) {
+        console.log('streaming:start with data=['+data+']');
+        var user = $scope.activeUsers[data.id];
+        if ( ! user ) {
+            return console.log('Unable to find user for streaming');
+        }
+        showStream(user);
+        $http.get(ServerUrl + '/users/me').success(function(data) {
+            if(data.length === 0){
+                return;
+            }
+            if(data.group.id === user.groupId){
+                showNotification(user);
+            }
+        });
     });
     socket.on('streaming:stop', function(data) {
-      delete $scope.activeStreams[data.userId];
-      $scope.activeUsers[data.userId].marker.setIcon(markerIcons['red']);
+      delete $scope.activeStreams[data.id];
+      $scope.activeUsers[data.id].marker.setIcon(markerIcons['red']);
     });
   });
 
@@ -185,16 +195,28 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
       });
   };
 
+    $scope.popNotification = function(user){
+      toaster.pop('note', user.userName + " is streaming",'',0);
+    };
+
+    $scope.$on('toaster-Removed', function(event, toasterObj) {
+        console.log(toasterObj);
+    });
+
   function showStream(user) {
     $scope.activeStreams[user.id] = {
       status : 'streaming',
       streamId : user.id,
-      userName : user.name
+      userName : user.userName,
+      groupId: user.groupId
     };
-
     user.marker.setIcon(markerIcons['green']);
-
   }
+
+    function showNotification(user){
+        console.log('showNotification with user.name=['+user.userName+']');
+        $scope.popNotification(user);
+    }
 
   $scope.refreshUsers();
 });

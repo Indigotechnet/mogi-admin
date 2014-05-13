@@ -25,9 +25,10 @@
     "font-awesome": "~4.0",
     "angular-http-auth": "~1.2.1",
     "angular-ui-map": "~0.5.0",
-    "angular-jwplayer": "latest"
+    "angular-jwplayer": "latest",
+    "angular-toaster": "git://github.com/igarape/AngularJS-Toaster.git"
   },
-  "resolutions": {
-    "angular": "~1.2"
-  }
+    "resolutions": {
+        "angular": "~1.2"
+    }
 }

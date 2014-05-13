@@ -1,6 +1,7 @@
-angular.module('mogi-admin', ['ngRoute','ngAnimate','ui.bootstrap','ui.map','http-auth-interceptor', 'angular-jwplayer']);
+angular.module('mogi-admin', ['ngRoute','ngAnimate','ui.bootstrap','ui.map','http-auth-interceptor', 'angular-jwplayer' , 'toaster']);
 
-angular.module('mogi-admin').constant('ServerUrl', 'http://projectmogi.com');
+//angular.module('mogi-admin').constant('ServerUrl', 'http://projectmogi.com');
+angular.module('mogi-admin').constant('ServerUrl', 'http://localhost:3000');
 
 angular.module('mogi-admin')
 .config(function($routeProvider) {
