@@ -80,7 +80,8 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
         userName : data.name,
         deploymentGroup : data.group,
         marker : marker,
-        groupId: data.groupId
+        groupId: data.groupId,
+        streamUrl: data.streamUrl
       };
       for (var key in $scope.activeUsers){
           bounds.extend($scope.activeUsers[key].marker.getPosition());
@@ -99,19 +100,21 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
         if ( ! user ) {
             return console.log('Unable to find user for streaming');
         }
-        showStream(user);
         $http.get(ServerUrl + '/users/me').success(function(data) {
             if(data.length === 0){
                 return;
             }
             if(data.group.id === user.groupId){
+                showStream(user);
                 showNotification(user);
             }
         });
     });
     socket.on('streaming:stop', function(data) {
-      delete $scope.activeStreams[data.id];
-      $scope.activeUsers[data.id].marker.setIcon(markerIcons['red']);
+        delete $scope.activeStreams[data.id];
+        $scope.activeUsers[data.id].marker.setIcon(markerIcons['red']);
+        toaster.clearToastByUserId(data.id);
+        $scope.$apply();
     });
   });
 
@@ -151,17 +154,8 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
           streamId : user.id,
           userName : user.name
         };
-            console.log('creating modal');
-        $modal.open({
-            templateUrl: 'partial/home/player.html',
-            controller: 'ModalInstanceCtrl',
-            backdrop: false,
-            resolve: {
-                user: function(){return user;},
-                streamUrl: function(){return data.streamUrl;},
-                ServerUrl: function(){return ServerUrl;}
-            }
-        });
+        console.log('creating modal');
+        showModal(user, data.streamUrl);
       })
       .error(function(data) {
         $scope.streamingMessage = data.message;
@@ -196,12 +190,24 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
   };
 
     $scope.popNotification = function(user){
-      toaster.pop('note', user.userName + " is streaming",'',0);
+      toaster.pop('note', '', user.userName + " is streaming",0, 'trustedHtml', function(user){
+          showModal(user);
+      }, user);
     };
 
-    $scope.$on('toaster-Removed', function(event, toasterObj) {
-        console.log(toasterObj);
-    });
+  function showModal(user){
+      console.log('showModal with user=['+user+']');
+      $modal.open({
+          templateUrl: 'partial/home/player.html',
+          controller: 'ModalInstanceCtrl',
+          backdrop: false,
+          resolve: {
+              user: function(){return user;},
+              streamUrl: function(){return user.streamUrl;},
+              ServerUrl: function(){return ServerUrl;}
+          }
+      });
+  }
 
   function showStream(user) {
     $scope.activeStreams[user.id] = {
