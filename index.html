@@ -1,91 +1,125 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title></title>
+    <head>
+    <title></title>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
 
-  <!-- CSS from Bower components  -->
-  <link href="bower_components/angular-ui/build/angular-ui.css" rel="stylesheet">
-  <link href="bower_components/angular-toaster/toaster.css" rel="stylesheet">
+    <!-- CSS from Bower components  -->
+    <link href="bower_components/angular-ui/build/angular-ui.css" rel="stylesheet">
+    <link href="bower_components/angular-toaster/toaster.css" rel="stylesheet">
 
-  <!-- App LESS -->
-  <link href="css/app.less" type="text/css" rel="stylesheet/less">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+
+    <!-- App LESS -->
+    <link href="css/app.less" type="text/css" rel="stylesheet/less">
 
 </head>
 <body>
+    <!-- Livereload script for development only (stripped during dist build) -->
+    <script src="http://localhost:35729/livereload.js" data-build="exclude"></script>
 
-  <!-- Livereload script for development only (stripped during dist build) -->
-  <script src="http://localhost:35729/livereload.js" data-build="exclude"></script>
+    <script src="scripts/jwplayer/jwplayer.js" data-build="exclude" data-remove="exclude" ></script>
+    <!-- JS from Bower components -->
+    <script src="bower_components/less.js/dist/less-1.5.1.js" data-build="exclude"></script>
+    <script src="bower_components/lodash/dist/lodash.compat.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.js"></script>
+    <script src="bower_components/angular-ui/build/angular-ui.min.js"></script>
+    <script src="bower_components/angular-ui-map/ui-map.js"></script>
+    <script src="bower_components/angular-ui-utils/ui-utils.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="bower_components/angular-http-auth/src/http-auth-interceptor.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="bower_components/angular-touch/angular-touch.js"></script>
+    <script src="bower_components/moment/min/moment.min.js"></script>
+    <script src="bower_components/angular-jwplayer/angular-jwplayer.js"></script>
+    <script src="bower_components/angular-toaster/toaster.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=visualization&callback=onGoogleReady" data-build="exclude" data-remove="exclude" ></script>
 
-  <script src="scripts/jwplayer/jwplayer.js" data-build="exclude" data-remove="exclude" ></script>
-  <!-- JS from Bower components -->
-  <script src="bower_components/less.js/dist/less-1.5.1.js" data-build="exclude"></script>
-  <script src="bower_components/lodash/dist/lodash.compat.js"></script>
-  <script src="bower_components/angular/angular.js"></script>
-  <script src="bower_components/angular-resource/angular-resource.js"></script>
-  <script src="bower_components/angular-route/angular-route.js"></script>
-  <script src="bower_components/angular-animate/angular-animate.js"></script>
-  <script src="bower_components/angular-ui/build/angular-ui.min.js"></script>
-  <script src="bower_components/angular-ui-map/ui-map.js"></script>
-  <script src="bower_components/angular-ui-utils/ui-utils.js"></script>
-  <script src="bower_components/angular-bootstrap/ui-bootstrap.js"></script>
-  <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-  <script src="bower_components/angular-http-auth/src/http-auth-interceptor.js"></script>
-  <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-  <script src="bower_components/angular-touch/angular-touch.js"></script>
-  <script src="bower_components/moment/min/moment.min.js"></script>
-  <script src="bower_components/angular-jwplayer/angular-jwplayer.js"></script>
-  <script src="bower_components/angular-toaster/toaster.js"></script>
-  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=visualization&callback=onGoogleReady" data-build="exclude" data-remove="exclude" ></script>
+    <!-- Main App JS -->
+    <script src="js/setup.js"></script>
 
-  <!-- Main App JS -->
-  <script src="js/setup.js"></script>
+    <!-- Service JS -->
+    <script src="service/socket.js"></script>
+    <!-- Add New Service JS Above -->
 
-  <!-- Service JS -->
-  <script src="service/socket.js"></script>
-  <!-- Add New Service JS Above -->
+    <!-- Directive JS -->
+    <script src="directive/timeSlider.js"></script>
+    <!-- Add New Directive JS Above -->
 
-  <!-- Directive JS -->
-  <script src="directive/timeSlider.js"></script>
-  <!-- Add New Directive JS Above -->
+    <!--TOASTER CONTAINER -->
+    <toaster-container></toaster-container>
 
-  <toaster-container></toaster-container>
+    <!-- Partial JS -->
+    <script src="partial/login/login.js"></script>
+    <script src="partial/home/home.js"></script>
+    <script src="partial/analytics/analytics.js"></script>
+    <script src="partial/analyticsUser/analyticsUser.js"></script>
+    <script src="partial/users/users.js"></script>
+    <!-- Add New Partial JS Above -->
 
-  <!-- Filter JS -->
-  <!-- Add New Filter JS Above -->
 
-  <!-- Partial JS -->
-  <script src="partial/login/login.js"></script>
-  <script src="partial/home/home.js"></script>
-  <script src="partial/analytics/analytics.js"></script>
-  <script src="partial/analyticsUser/analyticsUser.js"></script>
-  <script src="partial/users/users.js"></script>
-  <!-- Add New Partial JS Above -->
-
-  <div id="wrap">
-    <div class="navbar navbar-default navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header"><a href="#" class="navbar-brand">Smart Policing</a></div>
-            <ul class="nav navbar-nav">
-                <li><a href="#/">Realtime</a></li>
-                <li><a href="#/analytics">Analytics</a></li>
-                <li><a href="#/user-list">Users</a></li>
+    <div class="header-wrapper" id="headerWrapper">
+        <div class="header">
+            <!--<a href="#" ng-click="selected = 'realtime'" class="logo"><img src="http://igarape.org.br/wp-content/themes/igarape_v2/images/logo.png" alt="Smart Policing" style="width: 160px;"></a>-->
+            <span class="logo">Smart Policing</span>
+            <div class="map-action-bar input-group" ng-show="selected != 'users' && selected != 'analytics'">
+                <input type="text" class="form-control" ng-model="usersFilter" placeholder="Type to filter the map..." />
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" type="submit" ng-click="filterUsers();">
+                            <i class="glyphicon glyphicon-search"></i>
+                        </button>
+                    </div>
+            </div>
+            <ul class="nav">
+                <li class="home"><a href="#" ng-click="selected = 'realtime'">Realtime</a></li>
+                <li class="services"><a href="#/analytics" ng-click="selected = 'analytics'">Analytics</a></li>
+                <li class="work"><a href="#/user-list" ng-click="selected = 'users'">Users</a></li>
             </ul>
-        </div>
+            <div id="menubuttonsvg">
+                <svg version="1.1" id="mobileMenuButton" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="70px" height="40px" viewBox="0 0 70 40" enable-background="new 0 0 70 40" xml:space="preserve">
+                    <path fill="#FFFFFF" d="M42.417,15.996H17.542c-1.104,0-2-0.896-2-2s0.896-2,2-2h24.875c1.104,0,2,0.896,2,2
+                        S43.521,15.996,42.417,15.996z">
+                    </path>
+                    <path fill="#FFFFFF" d="M42.417,27H17.542c-1.104,0-2-0.896-2-2c0-1.104,0.896-2,2-2h24.875c1.104,0,2,0.896,2,2
+                        C44.417,26.104,43.521,27,42.417,27z">
+                    </path>
+                    <path fill="#FFFFFF" d="M42.417,38.004H17.542c-1.104,0-2-0.896-2-2s0.896-2,2-2h24.875c1.104,0,2,0.896,2,2
+                        S43.521,38.004,42.417,38.004z">
+                    </path>
+                </svg>
+            </div>
+            <a id="forwardsvg" href="http://grainandmortar.com/services/">
+                <svg version="1.1" id="mobileMenuButton" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="50px" height="40px" viewBox="0 0 50 40" enable-background="new 0 0 50 40" xml:space="preserve">
+                    <path fill="#FFFFFF" d="M32.772,23.514c-0.004-0.003-0.008-0.006-0.012-0.009L21.647,12.391c-0.78-0.781-2.048-0.781-2.828,0
+                        c-0.781,0.781-0.781,2.047,0,2.828l9.709,9.71l-9.847,9.849c-0.781,0.781-0.781,2.047,0,2.828c0.391,0.391,0.902,0.586,1.414,0.586
+                        s1.023-0.195,1.414-0.586l11.251-11.253c0.004-0.003,0.008-0.006,0.012-0.009c0.391-0.391,0.586-0.904,0.586-1.416
+                        S33.163,23.905,32.772,23.514z">
+                    </path>
+                </svg>
+            </a>
+            <a id="backsvg" href="http://grainandmortar.com/contact/">
+                <svg version="1.1" id="mobileMenuButton" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="50px" height="40px" viewBox="0 0 50 40" enable-background="new 0 0 50 40" xml:space="preserve">
+                    <path fill="#FFFFFF" d="M16.68,26.484c0.004,0.003,0.008,0.006,0.012,0.009l11.114,11.114c0.78,0.781,2.048,0.781,2.828,0
+                        c0.781-0.781,0.781-2.047,0-2.828l-9.709-9.71l9.847-9.849c0.781-0.781,0.781-2.047,0-2.828c-0.391-0.391-0.902-0.586-1.414-0.586
+                        s-1.023,0.195-1.414,0.586L16.692,23.646c-0.004,0.003-0.008,0.006-0.012,0.009c-0.391,0.391-0.586,0.903-0.586,1.415
+                        S16.29,26.094,16.68,26.484z">
+                    </path>
+                </svg>
+            </a>
+        </div> <!--header-->
     </div>
-    <div id="content" class="container">
-        <div ng-view>
-          Loading control panel....
-        </div>
-    </div>
-  </div>
+    <div ng-view id="content"></div>
 
-  <script data-build="exclude" data-remove="exclude">
-  window.onGoogleReady = function() {
-    angular.bootstrap(document.body, ['mogi-admin']);
-  };
-  </script>
+    <script data-build="exclude" data-remove="exclude">
+        window.onGoogleReady = function() {
+            angular.bootstrap(document.body, ['mogi-admin']);
+        };
+    </script>
 </body>
 </html>

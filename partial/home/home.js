@@ -27,6 +27,7 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
         }
         var pos = new google.maps.LatLng(data.group.lat, data.group.lng);
         $scope.myMap.panTo(pos);
+        $scope.defaultPos = pos;
     });
     $scope.windowHeight = window.innerHeight;
     $scope.windowWidth = window.innerWidth;
@@ -34,11 +35,30 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
   $scope.mapOptions = {
     center: new google.maps.LatLng(0,0),
     zoom: 11,
-    mapTypeId: google.maps.MapTypeId.ROADMAP
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    mapTypeControl: true,
+    mapTypeControlOptions: {
+      style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+      position: google.maps.ControlPosition.LEFT_CENTER
+    },
+    panControl: true,
+    panControlOptions: {
+      position: google.maps.ControlPosition.LEFT_CENTER
+    },
+    zoomControl: true,
+    zoomControlOptions: {
+      style: google.maps.ZoomControlStyle.LARGE,
+      position: google.maps.ControlPosition.LEFT_CENTER
+    },
+    scaleControl: true,
+    streetViewControl: true,
+    streetViewControlOptions: {
+      position: google.maps.ControlPosition.LEFT_CENTER
+    }
   };
 
   $scope.myStyle = {
-    "height": (window.innerHeight - 50) + "px",
+    "height": (window.innerHeight) + "px",
     "width": "100%"
   };
 
@@ -46,10 +66,13 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
   $scope.activeStreams = {};
   $scope.currentUser = null;
 
-  angular.element(window).bind('resize',function(){
-      $scope.myStyle["height"] = (window.innerHeight - 50) + "px";
-      google.maps.event.trigger($scope.myMap, 'resize');
-  });
+    $scope.$watch('selected', function () {
+        window.setTimeout(function(){
+            google.maps.event.trigger($scope.myMap, 'resize');
+            $scope.myMap.setCenter($scope.defaultPos);
+            $scope.refreshUsers();
+        },10);
+    });
 
   var markerIcons = {
     'red' : 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
@@ -220,7 +243,6 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
   }
 
     function showNotification(user){
-        console.log('showNotification with user.name=['+user.userName+']');
         $scope.popNotification(user);
     }
 

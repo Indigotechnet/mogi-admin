@@ -1,12 +1,6 @@
 <div id="map" class="col-md-12" ng-controller="HomeCtrl">
     <div class="row" style="position: relative;" ng-class="{ 'show-streams' : showStreams }">
-        <div class="map-action-bar">
-            <input ng-model="usersFilter" class="form-control" placeholder="Type to filter the map...">
-            <span class="input-group-addon btn btn-primary" ng-click="filterUsers();" style="background: #428bca;">
-                <i class="glyphicon glyphicon-search"></i>
-            </span>
-        </div>
-        <div ui-map="myMap" ui-options="mapOptions" ng-style="myStyle"></div>
+        <div ui-map="myMap" ui-options="mapOptions" ng-style="myStyle" id="map_canvas"></div>
         <div class="stream-panel" ng-if="activeStreams.length > 0">
             <div ng-repeat="stream in activeStreams">
                 <h4>Streaming {{stream.userName}}</h4>

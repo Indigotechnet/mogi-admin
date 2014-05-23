@@ -32,8 +32,16 @@ angular.module('mogi-admin')
   return loginService;
 }).controller('LoginCtrl',function($scope, $modalInstance, $http, loginService, ServerUrl){
 
-  $scope.username = '';
-  $scope.password = '';
+    $scope.username = '';
+    $scope.password = '';
+    $scope.selected = 'login';
+
+    $scope.forgotPass = function(){
+        $scope.selected = 'forgotPass';
+    };
+    $scope.sendEmail = function(){
+        $scope.selected = 'login';
+    };
 
   $scope.login = function() {
     $http.post(ServerUrl + '/token', {

@@ -1,7 +1,14 @@
 <form class="form-signin" >
     <h2 class="form-signin-heading">Project Mogi</h2>
     <span ng-if="errorMessage" class="alert">Error: {{$scope.errorMessage}}</span>
-    <input type="text" class="form-control" placeholder="Username" ng-model="$parent.username" autofocus >
-    <input type="password" class="form-control" placeholder="Password" ng-model="$parent.password">
-    <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="login()">Sign in</button>
+    <div ng-show="selected != 'forgotPass'">
+        <input type="text" class="form-control" placeholder="Username" ng-model="$parent.username" autofocus >
+        <input type="password" class="form-control" placeholder="Password" ng-model="$parent.password">
+        <a href="#" ng-click="forgotPass()">Forgot Password</a>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="login()">Sign in</button>
+    </div>
+    <div ng-show="selected == 'forgotPass'">
+        <input type="text" class="form-control" placeholder="Type your email" ng-model="$parent.email" autofocus >
+        <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="sendEmail()">OK</button>
+    </div>
 </form>
