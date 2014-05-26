@@ -172,11 +172,14 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
     $http.post(ServerUrl + '/streams/' + user.id + '/start')
       .success(function(data) {
         $scope.streamingMessage = data.message;
-        $scope.activeStreams[user.id] = {
-          status : 'waiting',
-          streamId : user.id,
-          userName : user.name
-        };
+            user.streamUrl = data.streamUrl;
+            setStreamingUser(user);
+//        $scope.activeStreams[user.id] = {
+//          status : 'waiting',
+//          streamId : user.id,
+//          userName : user.name,
+//          streamUrl : data.streamUrl
+//        };
         console.log('creating modal');
         showModal(user, data.streamUrl);
       })
@@ -232,14 +235,19 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
       });
   }
 
-  function showStream(user) {
-    $scope.activeStreams[user.id] = {
-      status : 'streaming',
-      streamId : user.id,
-      userName : user.userName,
-      groupId: user.groupId
-    };
-    user.marker.setIcon(markerIcons['green']);
+    function setStreamingUser(user) {
+        $scope.activeStreams[user.id] = {
+            status: 'streaming',
+            streamId: user.id,
+            userName: user.userName,
+            groupId: user.groupId,
+            streamUrl: user.streamUrl
+        };
+    }
+
+    function showStream(user) {
+        setStreamingUser(user);
+        user.marker.setIcon(markerIcons['green']);
   }
 
     function showNotification(user){
