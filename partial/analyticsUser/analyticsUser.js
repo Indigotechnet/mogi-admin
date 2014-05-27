@@ -1,5 +1,11 @@
 /* global google */
 angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $routeParams, $http, ServerUrl){
+
+    $scope.myStyle = {
+        "height": "450px",
+        "width": "100%"
+    };
+
   var userId = $routeParams.id,
       currentPositionMarker = new google.maps.Marker({
         position : new google.maps.LatLng(0,0)

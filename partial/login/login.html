@@ -1,14 +1,16 @@
-<form class="form-signin" >
+<form class="form-signin" ng-show="selected != 'forgotPass'">
     <h2 class="form-signin-heading">Project Mogi</h2>
-    <span ng-if="errorMessage" class="alert">Error: {{$scope.errorMessage}}</span>
-    <div ng-show="selected != 'forgotPass'">
-        <input type="text" class="form-control" placeholder="Username" ng-model="$parent.username" autofocus >
-        <input type="password" class="form-control" placeholder="Password" ng-model="$parent.password">
-        <a href="#" ng-click="forgotPass()">Forgot Password</a>
-        <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="login()">Sign in</button>
-    </div>
-    <div ng-show="selected == 'forgotPass'">
-        <input type="text" class="form-control" placeholder="Type your email" ng-model="$parent.email" autofocus >
-        <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="sendEmail()">OK</button>
-    </div>
+    <span ng-if="errorMessage" class="errorMessage">{{errorMessage}}</span>
+    <span ng-if="emailMessage" class="emailMessage">{{emailMessage}}</span>
+    <input type="text" class="form-control" placeholder="Username" ng-model="$parent.username" autofocus>
+    <input type="password" class="form-control" placeholder="Password" ng-model="$parent.password">
+    <a ng-click="forgotPass()">Forgot Password</a>
+    <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="login()">Sign in</button>
+</form>
+<form class="form-signin" ng-show="selected == 'forgotPass'">
+    <h2 class="form-signin-heading">Project Mogi</h2>
+    <span ng-if="errorMessage" class="errorMessage">{{errorMessage}}</span>
+    <span ng-if="emailMessage" class="emailMessage">{{emailMessage}}</span>
+    <input type="email" name="email" class="form-control" placeholder="Type your email" ng-model="$parent.email">
+    <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="sendEmail()">Reset Password</button>
 </form>

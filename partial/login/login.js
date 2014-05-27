@@ -1,5 +1,5 @@
 angular.module('mogi-admin')
-.factory('loginService',function($modal, authService, socket) {
+.factory('loginService',function($modal, $http, authService, socket) {
 
   var loginService = {},
       modal = null,
@@ -34,13 +34,34 @@ angular.module('mogi-admin')
 
     $scope.username = '';
     $scope.password = '';
+    $scope.email = '';
     $scope.selected = 'login';
 
     $scope.forgotPass = function(){
         $scope.selected = 'forgotPass';
+        $scope.errorMessage = '';
+        $scope.emailMessage = '';
     };
+
     $scope.sendEmail = function(){
-        $scope.selected = 'login';
+        $scope.errorMessage = '';
+        $scope.emailMessage = '';
+        if(!$scope.email || $scope.email === ''){
+            $scope.errorMessage = 'Type an valid email address';
+            return;
+        }
+        $scope.emailMessage = 'Trying to send email...';
+        $http.post(ServerUrl + '/users/'+$scope.email+'/reset_password', {
+            email:$scope.email
+        }).success(function(data) {
+            $scope.emailMessage = 'Email sent successfully';
+            $scope.selected = 'login';
+            $scope.email='';
+        }).error(function (data){
+            $scope.emailMessage = '';
+            $scope.errorMessage = data;
+            $scope.email='';
+        });
     };
 
   $scope.login = function() {
@@ -49,10 +70,11 @@ angular.module('mogi-admin')
       password : $scope.password,
       scope : 'admin'
     }).success(function(token) {
-      loginService.setToken(token.token);
-      $modalInstance.close();
-    }).error(function (data) {
-      $scope.errorMessage = data.message;
+        loginService.setToken(token.token);
+        $modalInstance.close();
+    }).error(function (data, status, headers, config) {
+        //TODO improve here...
+        $scope.errorMessage = 'Wrong login/pass combination';
     });
   };
 

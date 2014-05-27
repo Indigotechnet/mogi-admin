@@ -4,7 +4,7 @@ angular.module('mogi-admin', ['ngRoute','ngAnimate','ui.bootstrap','ui.map','htt
 angular.module('mogi-admin').constant('ServerUrl', 'http://localhost:3000');
 
 angular.module('mogi-admin')
-.config(function($routeProvider) {
+.config(['$routeProvider','$httpProvider', function($routeProvider, $httpProvider) {
 
     $routeProvider.
 	  when('/',{templateUrl: 'partial/home/home.html'}).
@@ -17,7 +17,24 @@ angular.module('mogi-admin')
       when('/user-creation', {templateUrl: 'partial/users/user-creation.html', controller: 'UserCreationCtrl'}).
       otherwise({redirectTo:'/'});
 
-});
+    $httpProvider.interceptors.push(function ($q) {
+        return {
+            'response': function (response) {
+                return response;
+            },
+            'responseError': function (rejection) {
+                if(rejection.status === 401 && rejection.config.url.indexOf('token') >-1) {
+                    //dunno why
+                    if($q.responseError){
+                        return $q.responseError(rejection);
+                    }
+                }
+                return $q.reject(rejection);
+            }
+        };
+    });
+
+}]);
 
 angular.module('mogi-admin').run(function($rootScope, loginService, socket) {
     $rootScope.$on("event:auth-loginRequired", function(data) {
