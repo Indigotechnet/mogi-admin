@@ -17,7 +17,7 @@ angular.module('mogi-admin')
       when('/user-creation', {templateUrl: 'partial/users/user-creation.html', controller: 'UserCreationCtrl'}).
       otherwise({redirectTo:'/'});
 
-    $httpProvider.interceptors.push(function ($q) {
+    $httpProvider.interceptors.push(['$q', function ($q) {
         return {
             'response': function (response) {
                 return response;
@@ -32,7 +32,7 @@ angular.module('mogi-admin')
                 return $q.reject(rejection);
             }
         };
-    });
+    }]);
 
 }]);
 

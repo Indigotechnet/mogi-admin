@@ -169,4 +169,8 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
   if ($routeParams.date) {
     $scope.loadData();
   }
+
+    window.setTimeout(function(){
+        google.maps.event.trigger($scope.locationMap, 'resize');
+    },10);
 });
