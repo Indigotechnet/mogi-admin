@@ -73,7 +73,6 @@ angular.module('mogi-admin')
         loginService.setToken(token.token);
         $modalInstance.close();
     }).error(function (data, status, headers, config) {
-        //TODO improve here...
         $scope.errorMessage = 'Wrong login/pass combination';
     });
   };

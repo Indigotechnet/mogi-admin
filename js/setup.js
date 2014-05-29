@@ -17,22 +17,22 @@ angular.module('mogi-admin')
       when('/user-creation', {templateUrl: 'partial/users/user-creation.html', controller: 'UserCreationCtrl'}).
       otherwise({redirectTo:'/'});
 
-    $httpProvider.interceptors.push(['$q', function ($q) {
-        return {
-            'response': function (response) {
+        var interceptor = ['$rootScope', '$q', function (scope, $q) {
+            function success(response) {
                 return response;
-            },
-            'responseError': function (rejection) {
-                if(rejection.status === 401 && rejection.config.url.indexOf('token') >-1) {
-                    //dunno why
-                    if($q.responseError){
-                        return $q.responseError(rejection);
-                    }
-                }
-                return $q.reject(rejection);
             }
-        };
-    }]);
+            function error(response) {
+                var status = response.status;
+                if (status === 401 && response.config.url.indexOf('token') >-1) {
+                    scope.errorMessage = 'Wrong login/pass combination';
+                }
+                return $q.reject(response);
+            }
+            return function (promise) {
+                return promise.then(success, error);
+            };
+        }];
+        $httpProvider.responseInterceptors.push(interceptor);
 
 }]);
 
