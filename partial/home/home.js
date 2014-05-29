@@ -20,7 +20,7 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
 
             });
     };
-}).controller('HomeCtrl', function($scope, $modal, $http, socket, ServerUrl, toaster){
+}).controller('HomeCtrl', function($scope, $modal, $http, socket, ServerUrl, toaster, $window){
     $http.get(ServerUrl + '/users/me').success(function(data) {
         if(data.length === 0){
             return;
@@ -72,6 +72,12 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
             $scope.myMap.setCenter($scope.defaultPos);
             $scope.refreshUsers();
         },10);
+    });
+
+    angular.element($window).bind('resize', function() {
+        $scope.myStyle["height"] = window.innerHeight + "px";
+        google.maps.event.trigger($scope.myMap, 'resize');
+        $scope.myMap.setCenter($scope.defaultPos);
     });
 
   var markerIcons = {

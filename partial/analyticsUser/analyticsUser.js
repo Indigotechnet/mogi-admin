@@ -1,5 +1,5 @@
 /* global google */
-angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $routeParams, $http, ServerUrl){
+angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $routeParams, $http, ServerUrl, $window){
 
     $scope.myStyle = {
         "height": "450px",
@@ -66,6 +66,15 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
     mapTypeId: google.maps.MapTypeId.ROADMAP
   };
 
+    $http.get(ServerUrl + '/users/me').success(function(data) {
+        if(data.length === 0){
+            return;
+        }
+        var pos = new google.maps.LatLng(data.group.lat, data.group.lng);
+        $scope.locationMap.panTo(pos);
+        $scope.defaultPos = pos;
+    });
+
   $scope.$watch('currentDate', function(newVal) {
     if (newVal) {
       $scope.skipTime();
@@ -93,23 +102,6 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
 
     $http.get(ServerUrl + '/users/' + userId + '/locations/' + date )
       .success(function(data) {
-
-        if (data === undefined || data.length === 0 ){
-            $scope.locations = [];
-            if(!!navigator.geolocation) {
-
-                navigator.geolocation.getCurrentPosition(function(position) {
-
-                    var geolocate = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-
-                    $scope.locationMap.setCenter(geolocate);
-                    if (heatmap != null){
-                        heatmap.setMap(null);
-                    }
-                });
-            }
-            return;
-        }
 
         $scope.currentMap = HEATMAP_OPT;
 
@@ -172,5 +164,12 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
 
     window.setTimeout(function(){
         google.maps.event.trigger($scope.locationMap, 'resize');
+        $scope.locationMap.setCenter($scope.defaultPos);
     },10);
+
+    angular.element($window).bind('resize', function() {
+        $scope.myStyle["height"] = "450px";
+        google.maps.event.trigger($scope.locationMap, 'resize');
+        $scope.locationMap.setCenter($scope.defaultPos);
+    });
 });
