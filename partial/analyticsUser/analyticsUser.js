@@ -170,6 +170,6 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
     angular.element($window).bind('resize', function() {
         $scope.myStyle["height"] = "450px";
         google.maps.event.trigger($scope.locationMap, 'resize');
-        $scope.locationMap.setCenter($scope.defaultPos);
+        changeMap();
     });
 });

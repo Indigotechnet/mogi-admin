@@ -77,7 +77,7 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
     angular.element($window).bind('resize', function() {
         $scope.myStyle["height"] = window.innerHeight + "px";
         google.maps.event.trigger($scope.myMap, 'resize');
-        $scope.myMap.setCenter($scope.defaultPos);
+        $scope.refreshUsers();
     });
 
   var markerIcons = {
