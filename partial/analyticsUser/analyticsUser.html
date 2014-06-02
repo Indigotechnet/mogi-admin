@@ -1,6 +1,7 @@
 <div class="containerAnalytics">
     <div class="col-md-12" ng-controller="AnalyticsUserCtrl">
         <div class="row" style="margin-bottom: 18px;">
+            <span ng-if="userMessage" class="userMessage">{{userMessage}}</span>
             <div class="col-md-1">Date: </div>
             <div class="col-md-2"><input datepicker-popup="yyyy-MM-dd" type="text" class="form-control" ng-model="currentDate"></div>
             <div class="col-md-2"><button class="btn btn-primary btn-s" ng-click="loadData()">Search</button></div>

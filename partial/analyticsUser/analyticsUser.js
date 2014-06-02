@@ -59,6 +59,7 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
   $scope.currentDate = ($routeParams.date) ? moment($routeParams.date).toDate() : new Date();
   $scope.sliderFrom = moment($scope.currentDate).hour(0).minute(0).seconds(0).valueOf();
   $scope.sliderTo = moment($scope.currentDate).hour(23).minute(59).seconds(59).valueOf();
+  $scope.userMessage = '';
 
   $scope.mapOptions = {
     center: new google.maps.LatLng(0,0),
@@ -104,6 +105,12 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
       .success(function(data) {
 
         $scope.currentMap = HEATMAP_OPT;
+
+        if(data.length === 0){
+            $scope.userMessage = 'Não existem dados para a data selecionada.';
+            return;
+        }
+        $scope.userMessage = '';
 
         $scope.locations = data;
         var pos = new google.maps.LatLng($scope.locations[0].lat, $scope.locations[0].lng);
