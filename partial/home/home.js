@@ -81,8 +81,8 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
     });
 
   var markerIcons = {
-    'red' : 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
-    'green' : 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+    'red' : 'http://www.rmsp.com/wp-content/plugins/rmsp/img/icons/map/spotlight-poi-red.png',
+    'green' : 'http://www.rmsp.com/wp-content/plugins/rmsp/img/icons/map/spotlight-poi-green.png'
   };
 
   var loadUser = function (data) {
@@ -96,7 +96,8 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
       var bounds = new google.maps.LatLngBounds();
       var marker = new google.maps.Marker({
         map: $scope.myMap,
-        position: pos
+        position: pos,
+        icon: markerIcons['red']
       });
 
       google.maps.event.addListener(marker, 'click', function() {
