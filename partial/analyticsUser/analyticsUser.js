@@ -107,7 +107,7 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
         $scope.currentMap = HEATMAP_OPT;
 
         if(data.length === 0){
-            $scope.userMessage = 'Não existem dados para a data selecionada.';
+            $scope.userMessage = "This user didn't login at this date.";
             return;
         }
         $scope.userMessage = '';
