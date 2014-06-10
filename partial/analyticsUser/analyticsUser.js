@@ -71,6 +71,9 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
         if(data.length === 0){
             return;
         }
+        if(!data.group.lat || !data.group.lng || isNaN(data.group.lat) || isNaN(data.group.lat)){
+            return;
+        }
         var pos = new google.maps.LatLng(data.group.lat, data.group.lng);
         $scope.locationMap.panTo(pos);
         $scope.defaultPos = pos;
@@ -171,7 +174,9 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
 
     window.setTimeout(function(){
         google.maps.event.trigger($scope.locationMap, 'resize');
-        $scope.locationMap.setCenter($scope.defaultPos);
+        if($scope.defaultPos){
+            $scope.locationMap.setCenter($scope.defaultPos);
+        }
     },10);
 
     angular.element($window).bind('resize', function() {

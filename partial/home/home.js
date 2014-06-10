@@ -25,6 +25,9 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
         if(data.length === 0){
             return;
         }
+        if(!data.group.lat || !data.group.lng || isNaN(data.group.lat) || isNaN(data.group.lat)){
+            return;
+        }
         var pos = new google.maps.LatLng(data.group.lat, data.group.lng);
         $scope.myMap.panTo(pos);
         $scope.defaultPos = pos;
@@ -69,7 +72,9 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
     $scope.$watch('selected', function () {
         window.setTimeout(function(){
             google.maps.event.trigger($scope.myMap, 'resize');
-            $scope.myMap.setCenter($scope.defaultPos);
+            if($scope.defaultPos){
+                $scope.myMap.setCenter($scope.defaultPos);
+            }
             $scope.refreshUsers();
         },10);
     });
@@ -134,9 +139,14 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
             if(data.length === 0){
                 return;
             }
+            var foundAdminOnline = false;
             if(data.group.id === user.groupId){
                 showStream(user);
                 showNotification(user);
+                foundAdminOnline = true;
+            }
+            if(!foundAdminOnline){
+                $scope.stopStream(user);
             }
         });
     });
