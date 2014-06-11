@@ -1,7 +1,7 @@
 <div class="containerUser">
-    <form novalidate="novalidate" class="form-horizontal">
-        <h1>User details</h1>
-        <div class="col-md-4">
+    <h1>User details</h1>
+    <div class="col-md-4">
+        <form novalidate="novalidate" class="form-horizontal">
             <alert ng-show="serverMessage">
                 <li ng-repeat="(key, value) in serverMessage">
                     {{value[0]}}
@@ -45,9 +45,11 @@
                     <a ng-click="updateUser()" class="btn btn-small btn-primary">update user</a>
                 </div>
             </div>
-        </div>
-        <div class="col-md-8" ng-show="authenticatedUser" ng-cloak>
-            <div class="control-group">
+        </form>
+    </div>
+    <div class="col-md-4">
+        <form novalidate="novalidate" class="form-horizontal">
+            <div class="control-group" ng-show="authenticatedUser" ng-cloak>
                 <label class="control-label" for="currentpassword">Change password</label>
                 <div class="controlsPassword">
                     <input type="password" id="currentpassword" ng-model="currentPassword" placeholder="Current password"/></br>
@@ -57,6 +59,17 @@
                 <span ng-if="passwordMessage" class="errorMessage">{{passwordMessage}}</span></br>
                 <a ng-click="changePassword()" class="btn btn-small btn-primary">change password</a>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
+    <div class="col-md-4">
+        <form class="form-horizontal" enctype="multipart/form-data" method="post">
+            <label class="control-label">Profile picture</label>
+            <div ng-show="hasProfilePicture">
+                <img ng-src="{{pictureUrl}}" height="250">
+            </div>
+            <div class="control-group" ng-show="authenticatedUser || authenticatedAdmin" ng-cloak>
+                <input type="file" ng-file-select="onFileSelect($files)" >
+            </div>
+        </form>
+    </div>
 </div>

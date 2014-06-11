@@ -27,9 +27,29 @@ angular.module('mogi-admin').controller('UserListCtrl', function($scope, $routeP
 
    });
 
-}).controller('UserDetailCtrl', function($scope, $routeParams, $http, $location, ServerUrl){
+}).controller('UserDetailCtrl', function($scope, $routeParams, $http, $location, ServerUrl, $upload){
 
     $scope.authenticatedUser = false;
+    $scope.authenticatedAdmin = false;
+    $scope.hasProfilePicture = false;
+    $scope.userPicture = '';
+
+    $scope.onFileSelect = function($files) {
+        $scope.hasProfilePicture = false;
+        $scope.pictureUrl = '';
+        $scope.upload = $upload.upload({
+            url: ServerUrl + '/users/'+$scope.user.id+'/upload-picture',
+            method: 'POST',
+            data: {userPicture: $scope.userPicture},
+            file: $files[0]
+        }).success(function(data, status, headers, config) {
+            $scope.hasProfilePicture = true;
+            $scope.pictureUrl = ServerUrl + '/pictures/'+$scope.user.id+'/original/show';
+        }).error(function(data, status){
+            console.log('error with data=['+data+']');
+            $scope.hasProfilePicture = false;
+        });
+    };
 
     $scope.changePassword = function () {
         $scope.passwordMessage = '';
@@ -76,8 +96,15 @@ angular.module('mogi-admin').controller('UserListCtrl', function($scope, $routeP
             if(data.length === 0){
                 return;
             }
+            if($scope.user.profilePicture){
+                $scope.hasProfilePicture = true;
+                $scope.pictureUrl = ServerUrl + '/pictures/'+$scope.user.id+'/original/show';
+            }
             if($scope.user.id === data.id){
                 $scope.authenticatedUser = true;
+            }
+            if($scope.user.groupId === data.groupId){
+                $scope.authenticatedAdmin = true;
             }
         });
     }).error(function(data) {
