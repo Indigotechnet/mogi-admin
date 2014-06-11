@@ -63,7 +63,7 @@
     </div>
     <div class="col-md-4">
         <form class="form-horizontal" enctype="multipart/form-data" method="post">
-            <label class="control-label">Profile picture</label>
+            <label class="control-label" ng-show="hasProfilePicture">Profile picture</label>
             <div ng-show="hasProfilePicture">
                 <img ng-src="{{pictureUrl}}" height="250">
             </div>
