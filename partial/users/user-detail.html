@@ -67,7 +67,7 @@
             <div ng-show="hasProfilePicture">
                 <img ng-src="{{pictureUrl}}" height="250">
             </div>
-            <div class="control-group" ng-show="authenticatedUser || authenticatedAdmin" ng-cloak>
+            <div class="control-group" ng-show="authenticatedUser" ng-cloak>
                 <input type="file" ng-file-select="onFileSelect($files)" >
             </div>
         </form>
