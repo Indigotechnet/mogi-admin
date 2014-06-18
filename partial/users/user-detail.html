@@ -49,7 +49,7 @@
     </div>
     <div class="col-md-4">
         <form novalidate="novalidate" class="form-horizontal">
-            <div class="control-group" ng-show="authenticatedUser" ng-cloak>
+            <div class="control-group" ng-show="groupAdmin" ng-cloak>
                 <label class="control-label" for="currentpassword">Change password</label>
                 <div class="controlsPassword">
                     <input type="password" id="currentpassword" ng-model="currentPassword" placeholder="Current password"/></br>
@@ -67,7 +67,7 @@
             <div ng-show="hasProfilePicture">
                 <img ng-src="{{pictureUrl}}" height="250">
             </div>
-            <div class="control-group" ng-show="authenticatedAdmin" ng-cloak>
+            <div class="control-group" ng-show="groupAdmin" ng-cloak>
                 <input type="file" ng-file-select="onFileSelect($files)" >
             </div>
         </form>
