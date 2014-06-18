@@ -29,8 +29,6 @@ angular.module('mogi-admin').controller('UserListCtrl', function($scope, $routeP
 
 }).controller('UserDetailCtrl', function($scope, $routeParams, $http, $location, ServerUrl, $upload){
 
-    $scope.authenticatedUser = false;
-    $scope.groupAdmin = false;
     $scope.hasProfilePicture = false;
     $scope.userPicture = '';
 
@@ -99,12 +97,6 @@ angular.module('mogi-admin').controller('UserListCtrl', function($scope, $routeP
             if($scope.user.profilePicture){
                 $scope.hasProfilePicture = true;
                 $scope.pictureUrl = ServerUrl + '/pictures/'+$scope.user.id+'/original/show';
-            }
-            if($scope.user.id === data.id){
-                $scope.authenticatedUser = true;
-            }
-            if(data.group.isGroupAdmin !== null && data.group.isGroupAdmin){
-                $scope.groupAdmin = true;
             }
         });
     }).error(function(data) {
