@@ -1,0 +1,41 @@
+<div class="containerAnalytics">
+    <div class="row clearfix" ng-controller="AnalyticsUserCtrl">
+        <div class="col-md-3 column">
+            <div class="row clearfix">
+                <div>
+                    <input type="text" class="form-control" ng-model="search.user" placeholder="Search for a user">
+                    <hr><!--TODO fix hr`s position/layout-->
+                </div>
+                <div class="col-md-4 column">
+                    <img ng-src="{{pictureUrl}}">
+                </div>
+                <div class="col-md-8 column">
+                    <div class="small span4">
+                        <span>username: {{targetUserName}}</span>
+                    </div>
+                    <div class="small span4">
+                        <span>lastSeen: {{lastLocationDate}}</span>
+                    </div>
+                </div>
+                <div class="calendar">
+                    <hr>
+                    <datepicker ng-model="currentDate" min-date="minDate" show-weeks="true" class="well well-sm"></datepicker>
+                </div>
+                <hr><!--TODO fix hr`s position/layout-->
+                <em>{{currentDate | date:'fullDate' }}</em>
+                <hr>
+                <input type="checkbox" ng-model="gpsOnly" />  Gps Only
+                <input type="radio" ng-model="currentMap" value="HEATMAP" ng-change='changeMap()'/> Heatmap
+                <input type="radio" ng-model="currentMap" value="PATH" ng-change='changeMap()'/>  Path
+            </div>
+        </div>
+        <div class="col-md-9 column">
+            <div ui-map="locationMap" ui-options="mapOptions" ng-style="myStyle" id="location_map_canvas"></div>
+            <div class="col-md-10">
+                <span class="current-time" ng-bind="currentDate | date : 'HH:mm:ss' "></span>
+                <time-slider min="sliderFrom" max="sliderTo" class="timeSlider" ng-model="currentDate" step="720"></time-slider>
+            </div>
+            <video ng-repeat="video in videos" type='video/mp4' class='videoPlayer' controls preload='none' ng-src="{{trustSrc(video.src)}}"></video>
+        </div>
+    </div>
+</div>
