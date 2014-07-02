@@ -1,6 +1,6 @@
 angular.module('mogi-admin', ['ngRoute','ngAnimate','ui.bootstrap','ui.map','http-auth-interceptor', 'angular-jwplayer' , 'toaster', 'angularFileUpload']);
 
-angular.module('mogi-admin').constant('ServerUrl', 'http://projectmogi.com');
+angular.module('mogi-admin').constant('ServerUrl', 'http://mogi.igarape.org/api');
 //angular.module('mogi-admin').constant('ServerUrl', 'http://localhost:3000');
 
 angular.module('mogi-admin')
@@ -8,7 +8,8 @@ angular.module('mogi-admin')
 
     $routeProvider.
 	  when('/',{templateUrl: 'partial/home/home.html'}).
-	  when('/analytics',{templateUrl: 'partial/analytics/analytics.html'}).
+      when('/analytics',{templateUrl: 'partial/analytics/analytics.html'}).
+     when('/analytics2/:id',{templateUrl: 'partial/analyticsUser/analyticsUser2.html'}).
 	  when('/analytics/:id',{templateUrl: 'partial/analyticsUser/analyticsUser.html'}).
 	  /* Add New Routes Above */
       when('/analytics/:id/date/:date',{templateUrl: 'partial/analyticsUser/analyticsUser.html'}).
