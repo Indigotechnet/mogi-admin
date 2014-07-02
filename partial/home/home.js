@@ -5,6 +5,7 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
     $scope.jwOptions = {
         file: streamUrl,
         height: 300,
+        autostart: true,
         width: "100%"
 
     };
@@ -185,20 +186,11 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
   };
 
   $scope.requestStream = function(user) {
-    $scope.streamingMessage = 'Sending request';
+    $scope.streamingMessage = 'Sending request...';
     $http.post(ServerUrl + '/streams/' + user.id + '/start')
       .success(function(data) {
-        $scope.streamingMessage = data.message;
             user.streamUrl = data.streamUrl;
             setStreamingUser(user);
-//        $scope.activeStreams[user.id] = {
-//          status : 'waiting',
-//          streamId : user.id,
-//          userName : user.name,
-//          streamUrl : data.streamUrl
-//        };
-        console.log('creating modal');
-        showModal(user, data.streamUrl);
       })
       .error(function(data) {
         $scope.streamingMessage = data.message;
@@ -234,6 +226,7 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
 
     $scope.popNotification = function(user){
       toaster.pop('note', '', user.userName + " is streaming",0, 'trustedHtml', function(user){
+          $scope.userWindow.close();
           showModal(user);
       }, user);
     };
