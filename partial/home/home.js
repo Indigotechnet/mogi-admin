@@ -117,7 +117,8 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
         deploymentGroup : data.group,
         marker : marker,
         groupId: data.groupId,
-        streamUrl: data.streamUrl
+        streamUrl: data.streamUrl,
+        picture: ServerUrl + '/pictures/'+data.id+'/original/show'
       };
       for (var key in $scope.activeUsers){
           bounds.extend($scope.activeUsers[key].marker.getPosition());
