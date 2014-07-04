@@ -22,17 +22,7 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
             });
     };
 }).controller('HomeCtrl', function($scope, $modal, $http, socket, ServerUrl, toaster, $window){
-    $http.get(ServerUrl + '/users/me').success(function(data) {
-        if(data.length === 0){
-            return;
-        }
-        if(!data.group.lat || !data.group.lng || isNaN(data.group.lat) || isNaN(data.group.lat)){
-            return;
-        }
-        var pos = new google.maps.LatLng(data.group.lat, data.group.lng);
-        $scope.myMap.panTo(pos);
-        $scope.defaultPos = pos;
-    });
+
     $scope.windowHeight = window.innerHeight;
     $scope.windowWidth = window.innerWidth;
 
@@ -66,9 +56,9 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
     "width": "100%"
   };
 
-  $scope.activeUsers = {};
-  $scope.activeStreams = {};
-  $scope.currentUser = null;
+    $scope.activeUsers = {};
+    $scope.activeStreams = {};
+    $scope.currentUser = null;
 
     $scope.$watch('selected', function () {
         window.setTimeout(function(){
@@ -213,6 +203,7 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
     $http.get(ServerUrl + '/users/online')
       .success(function(data) {
         if(data.length === 0){
+            $scope.refreshMap();
             return;
         }
         var bounds = new google.maps.LatLngBounds();
@@ -225,12 +216,38 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
       });
   };
 
+    $scope.refreshMap = function() {
+        $http.get(ServerUrl + '/users/me').success(function(data) {
+            if(data.length === 0){
+                return;
+            }
+            if(!data.lastPos || isNaN(data.lastPos.lat) || isNaN(data.lastPos.lng)){
+                return;
+            }else{
+                changeMapPos(data.lastPos.lat, data.lastPos.lng);
+                return;
+            }
+            if(!data.group.lat || !data.group.lng ||
+                isNaN(data.group.lat) || isNaN(data.group.lat)){
+                return;
+            }else{
+                changeMapPos(data.group.lat, data.group.lng);
+            }
+        });
+    };
+
     $scope.popNotification = function(user){
       toaster.pop('note', '', user.userName + " is streaming",0, 'trustedHtml', function(user){
           $scope.userWindow.close();
           showModal(user);
       }, user);
     };
+
+    function changeMapPos(lat, lng){
+        var pos = new google.maps.LatLng(lat, lng);
+        $scope.myMap.panTo(pos);
+        $scope.defaultPos = pos;
+    }
 
   function showModal(user){
       console.log('showModal with user=['+user+']');
