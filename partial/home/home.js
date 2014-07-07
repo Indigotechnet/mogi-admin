@@ -122,7 +122,6 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
     socket.on('users:location', loadUser);
 
     socket.on('streaming:start', function(data) {
-        console.log('streaming:start with data=['+data+']');
         var user = $scope.activeUsers[data.id];
         if ( ! user ) {
             return console.log('Unable to find user for streaming');
