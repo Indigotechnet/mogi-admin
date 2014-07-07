@@ -21,7 +21,7 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
 
             });
     };
-}).controller('HomeCtrl', function($scope, $modal, $http, socket, ServerUrl, toaster, $window){
+}).controller('HomeCtrl', function($scope, $modal, $http, socket, ServerUrl, toaster, $window, $rootScope){
 
     $scope.windowHeight = window.innerHeight;
     $scope.windowWidth = window.innerWidth;
@@ -104,6 +104,7 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
       $scope.activeUsers[data.id] = {
         id : data.id,
         userName : data.name,
+        login: data.username,
         deploymentGroup : data.group,
         marker : marker,
         groupId: data.groupId,
@@ -149,20 +150,26 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
     });
   });
 
-  $scope.filterUsers = function() {
-    var usersFound = [];
-
-    angular.forEach($scope.activeUsers, function(user) {
-      if ( $scope.usersFilter.length === 0 ||
-          user.deploymentGroup.indexOf($scope.usersFilter) > -1 ||
-          user.userId.indexOf($scope.usersFilter) > -1 ||
-          user.userName.indexOf($scope.usersFilter) > -1
-      ) {
-        user.marker.setMap($scope.myMap);
-      } else {
-        user.marker.setMap(null);
-      }
+    $rootScope.$on("event:filter-Users", function(data) {
+        $scope.filterUsers(data);
     });
+
+  $scope.filterUsers = function(data) {
+      var searchString = data.targetScope.usersFilter;
+      if(!searchString){
+          //TODO
+          return;
+      }else{
+          var usersFound = [];
+          angular.forEach($scope.activeUsers, function(user) {
+              //TODO add group so we can search for specific groups
+              if(user.userName === searchString || user.login === searchString){
+                  user.marker.setMap($scope.myMap);
+              }else{
+                  user.marker.setMap(null);
+              }
+          });
+      }
   };
 
   $scope.showUser = function(userId) {

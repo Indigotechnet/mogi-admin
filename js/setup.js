@@ -38,6 +38,9 @@ angular.module('mogi-admin')
 }]);
 
 angular.module('mogi-admin').run(function($rootScope, loginService, socket) {
+
+    $rootScope.usersFilter = '';
+
     $rootScope.$on("event:auth-loginRequired", function(data) {
         loginService.show();
     });
@@ -57,6 +60,10 @@ angular.module('mogi-admin').run(function($rootScope, loginService, socket) {
         } else {
             this.$apply(fn);
         }
+    };
+
+    $rootScope.filterUsers = function () {
+        $rootScope.$broadcast('event:filter-Users', $rootScope.usersFilter);
     };
 
 });
