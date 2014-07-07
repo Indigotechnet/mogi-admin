@@ -22,17 +22,7 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
             });
     };
 }).controller('HomeCtrl', function($scope, $modal, $http, socket, ServerUrl, toaster, $window){
-    $http.get(ServerUrl + '/users/me').success(function(data) {
-        if(data.length === 0){
-            return;
-        }
-        if(!data.group.lat || !data.group.lng || isNaN(data.group.lat) || isNaN(data.group.lat)){
-            return;
-        }
-        var pos = new google.maps.LatLng(data.group.lat, data.group.lng);
-        $scope.myMap.panTo(pos);
-        $scope.defaultPos = pos;
-    });
+
     $scope.windowHeight = window.innerHeight;
     $scope.windowWidth = window.innerWidth;
 
@@ -213,6 +203,7 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
     $http.get(ServerUrl + '/users/online')
       .success(function(data) {
         if(data.length === 0){
+            $scope.refreshMap();
             return;
         }
         var bounds = new google.maps.LatLngBounds();
