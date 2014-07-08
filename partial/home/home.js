@@ -21,7 +21,7 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
 
             });
     };
-}).controller('HomeCtrl', function($scope, $modal, $http, socket, ServerUrl, toaster, $window, $rootScope){
+}).controller('HomeCtrl', function($scope, $modal, $http, socket, ServerUrl, toaster, $window, $rootScope, $location){
 
     $scope.windowHeight = window.innerHeight;
     $scope.windowWidth = window.innerWidth;
@@ -171,6 +171,13 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
           });
       }
   };
+
+    $scope.goToUser = function(user) {
+        var path = '/analytics/' + user.id;
+        var now = moment();
+        path += '/date/' + moment(now).format('YYYY-MM-DD');
+        $location.path(path);
+    };
 
   $scope.showUser = function(userId) {
     $scope.currentUser = $scope.activeUsers[userId];
