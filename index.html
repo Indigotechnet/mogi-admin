@@ -70,7 +70,7 @@
         <div class="header">
             <!--<a href="#" ng-click="selected = 'realtime'" class="logo"><img src="http://igarape.org.br/wp-content/themes/igarape_v2/images/logo.png" alt="Smart Policing" style="width: 160px;"></a>-->
             <span class="logo">Smart Policing</span>
-            <div class="map-action-bar input-group" ng-show="selected != 'users' && selected != 'analytics'">
+            <div class="map-action-bar input-group" ng-show="selected === 'realtime'">
                 <input type="text" class="form-control" ng-model="usersFilter" placeholder="Type to filter the map..." />
                     <div class="input-group-btn">
                         <button class="btn btn-default" type="submit" ng-click="filterUsers();">
