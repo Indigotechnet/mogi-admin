@@ -109,7 +109,7 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
         marker : marker,
         groupId: data.groupId,
         streamUrl: data.streamUrl,
-        picture: ServerUrl + '/pictures/'+data.id+'/original/show'
+        picture: data.profilePicture ? ServerUrl + data.profilePicture : null
       };
       for (var key in $scope.activeUsers){
           bounds.extend($scope.activeUsers[key].marker.getPosition());
