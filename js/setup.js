@@ -9,7 +9,6 @@ angular.module('mogi-admin')
     $routeProvider.
 	  when('/',{templateUrl: 'partial/home/home.html'}).
       when('/analytics',{templateUrl: 'partial/analytics/analytics.html'}).
-     when('/analytics2/:id',{templateUrl: 'partial/analyticsUser/analyticsUser2.html'}).
 	  when('/analytics/:id',{templateUrl: 'partial/analyticsUser/analyticsUser.html'}).
 	  /* Add New Routes Above */
       when('/analytics/:id/date/:date',{templateUrl: 'partial/analyticsUser/analyticsUser.html'}).

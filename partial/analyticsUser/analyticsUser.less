@@ -8,7 +8,6 @@
 .userMessage{
   color: red;
   font-weight: 300;
-  padding: 0px 0px 0px 15px;
 }
 .calendar {
   display: inline-block;
@@ -22,4 +21,35 @@ hr{
 }
 .timeSlider input {
   width: 100%;
+}
+.videoList
+{
+  overflow-x:scroll;
+  height:100%;
+  width:100%;
+}
+.videoItem
+{
+  width: 250px;
+  height: 160px;
+}
+
+.list-inline {
+  white-space:nowrap;
+}
+video {
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+
+  outline: none;
+  padding: 3px 0px 3px 3px;
+  margin: 5px 1px 3px 0px;
+}
+
+video:focus {
+  box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+  padding: 3px 0px 3px 3px;
+  margin: 5px 1px 3px 0px;
+  border: 1px solid rgba(81, 203, 238, 1);
 }
