@@ -41,14 +41,6 @@ angular.module('mogi-admin').directive('timeSlider', function() {
           adjusting = false;
 
         });
-        scope.$watch('min', function(newValue, oldValue) {
-          rangeInput.value = moment(scope.ngModel).valueOf();
-          rangeInput.min = scope.min;
-        });
-        scope.$watch('max', function(newValue, oldValue) {
-          rangeInput.value = moment(scope.ngModel).valueOf();
-          rangeInput.max = scope.max;
-        });
       }
     };
 });
