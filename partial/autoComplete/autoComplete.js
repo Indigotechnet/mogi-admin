@@ -15,7 +15,7 @@ angular.module('mogi-admin').factory('autoCompleteService',function($http) {
             id: '@',
             title: '@',
             subtitle:'@',
-            profilePicture:'@',
+            profilepicture:'@',
             model: '=',
             onSelect:'&'
         },

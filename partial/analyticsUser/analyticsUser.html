@@ -2,19 +2,21 @@
     <div class="row clearfix" ng-controller="AnalyticsUserCtrl">
         <div class="col-md-3 column">
             <div class="row clearfix">
-                <div ng-controller="AnalyticsUserCtrl" style="z-index: 1000">
-                    <typeahead items="items" prompt="Search for a user" title="name" subtitle="username" model="user" id="id" profilePicture="profilePicture" on-select="onItemSelected()" />
-                    <hr><!--TODO fix hr`s position/layout-->
+                <div ng-controller="AnalyticsUserCtrl" >
+                    <typeahead items="items" prompt="Search for a user" title="name" subtitle="username" model="user" id="id" profilepicture="profilePicture" on-select="onItemSelected()" />
                 </div>
-                <div class="col-md-4 column">
+                <div class="col-md-4 column" ng-show="pictureUrl">
                     <img ng-src="{{pictureUrl}}">
                 </div>
                 <div class="col-md-8 column">
+                    <div class="span4">
+                        <span>{{targetName}}</span>
+                    </div>
                     <div class="small span4">
                         <span>username: {{targetUserName}}</span>
                     </div>
                     <div class="small span4">
-                        <span>lastSeen: {{lastLocationDate}}</span>
+                        <span>last seen: {{lastLocationDate}}</span>
                     </div>
                     <div class="small span4">
                         <span ng-if="userMessage" class="userMessage">{{userMessage}}</span>

@@ -8,7 +8,9 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
 
     autoCompleteService.get(ServerUrl + '/users').then(function(data){
         angular.forEach(data, function(user) {
-            user.profilePicture = data.baseUrl = ServerUrl + '/pictures/'+user.id+'/original/show';
+            if (user.profilePicture != null) {
+                user.profilePicture = data.baseUrl = ServerUrl + '/pictures/' + user.id + '/original/show';
+            }
         });
         $scope.items=data;
     });
@@ -80,14 +82,18 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
         $scope.locationMap.setCenter(currentPositionMarker.getPosition());
     }
     $scope.hasPicture = false;
-    $http.get(ServerUrl + '/pictures/'+userId+'/small/show').success(function(data) {
-        $scope.hasPicture = true;
-        $scope.pictureUrl = ServerUrl + '/pictures/'+userId+'/small/show';
-    });
+
     $http.get(ServerUrl + '/users/'+userId).success(function(data) {
         $scope.targetUserName = data.username;
+        $scope.targetName = data.name;
         var date = new Date(data.lastLocationUpdateDate);
         $scope.lastLocationDate = date.toLocaleString();
+
+        //Placed the url of the picture in a autheticated request - only loads if logged
+        $http.get(ServerUrl + '/pictures/'+userId+'/small/show').success(function(data) {
+            $scope.hasPicture = true;
+            $scope.pictureUrl = ServerUrl + '/pictures/'+userId+'/small/show';
+        });
     });
   $scope.videos = [];
   $scope.locations = [];
