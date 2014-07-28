@@ -2,9 +2,20 @@
     <div class="row clearfix" ng-controller="AnalyticsUserCtrl">
         <div class="col-md-3 column">
             <div class="row clearfix">
+
+                <script type="text/ng-template" id="customTemplate.html">
+                    <div class="item">
+                        <img class="pictureUrl" src="{{match.model.profilePicture}}" height="45" ng-show="match.model.profilePicture != null">
+                        <p class="title">{{match.model.name}}</p>
+                        <p class="subtitle">{{match.model.username}}</p>
+                    </div>
+                </script>
+
                 <div ng-controller="AnalyticsUserCtrl" >
-                    <typeahead items="items" prompt="Search for a user" title="name" subtitle="username" model="user" id="id" profilepicture="profilePicture" on-select="onItemSelected()" />
+                    <input type="text" ng-model="selected" typeahead="user as user.name for user in users | filter:{name:$viewValue}"
+                           typeahead-template-url="customTemplate.html" typeahead-on-select="onItemSelected($item, $model, $label)" class="form-control" placeholder="Search for user">
                 </div>
+
                 <div class="col-md-4 column" ng-show="pictureUrl">
                     <img ng-src="{{pictureUrl}}">
                 </div>

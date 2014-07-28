@@ -1,27 +1,29 @@
 /* global google */
-angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $routeParams, $http, ServerUrl, $window, $sce, $document, autoCompleteService, $location){
+angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $routeParams, $http, ServerUrl, $window, $sce, $document, $location){
+    $scope.selected = undefined;
 
     $scope.myStyle = {
         "height": "400px",
         "width": "100%"
     };
 
-    autoCompleteService.get(ServerUrl + '/users').then(function(data){
+    $http.get(ServerUrl + '/users').success(function(data) {
         angular.forEach(data, function(user) {
             if (user.profilePicture != null) {
                 user.profilePicture = data.baseUrl = ServerUrl + '/pictures/' + user.id + '/original/show';
             }
         });
-        $scope.items=data;
+        $scope.users=data;
     });
-    $scope.onItemSelected=function(){
-        $scope.$apply(function(){
-            var path = '/analytics/' + $scope.user;
+
+
+    $scope.onItemSelected = function ($item, $model, $label) {
+
+            var path = '/analytics/' + $model.id;
             if ( $scope.currentDate ) {
                 path += '/date/' + moment($scope.currentDate).format('YYYY-MM-DD');
             }
             $location.path(path);
-        });
     };
 
   var userId = $routeParams.id,
