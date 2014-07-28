@@ -310,7 +310,7 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
         return false;
     };
 
-    $scope.shouldDateBeDisabled = function(date, mode) {
+    $scope.isDateEnabled = function(date, mode) {
         if (dateIsInArray(date, $scope.enabledDates)) {
             return true;
         }
