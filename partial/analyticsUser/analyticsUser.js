@@ -313,12 +313,6 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
         }
     };
 
-  if ($routeParams.date) {
-      $scope.loadLocations();
-      $scope.loadVideos();
-      $scope.loadEnabledDates();
-  }
-
     var isDateInArray = function(date,arrayOfDates) {
         var dateToQuery = moment(date);
         for(var i=0; i<arrayOfDates.length; i++){
