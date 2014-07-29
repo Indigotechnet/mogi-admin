@@ -1,6 +1,6 @@
 /* global google */
 angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $compile,$routeParams, $http, ServerUrl, $window, $sce, $document, $location){
-
+    $scope.selected = undefined;
     $scope.myStyle = {
         "height": "400px",
         "width": "100%"
@@ -87,10 +87,10 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
         if (data.lastLocationUpdateDate != null) {
             var dateLocation = new Date(data.lastLocationUpdateDate);
             $scope.lastLocationDate = dateLocation.toLocaleString();
-            $scope.currentDate = moment(dateLocation);
+            $scope.currentDate = dateLocation;
         } else {
             $scope.lastLocationDate = null;
-            $scope.currentDate = moment();
+            $scope.currentDate = new Date();
             $scope.userMessage = "This user never logged in.";
         }
         //Placed the url of the picture in a autheticated request - only loads if logged
