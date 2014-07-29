@@ -1,11 +1,12 @@
 /* global google */
-angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $routeParams, $http, ServerUrl, $window, $sce, $document, $location){
+angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $compile,$routeParams, $http, ServerUrl, $window, $sce, $document, $location){
     $scope.selected = undefined;
 
     $scope.myStyle = {
         "height": "400px",
         "width": "100%"
     };
+
 
     $http.get(ServerUrl + '/users').success(function(data) {
         angular.forEach(data, function(user) {
@@ -14,15 +15,12 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
             }
         });
         $scope.users=data;
+        $scope.loadEnabledDates();
     });
-
 
     $scope.onItemSelected = function ($item, $model, $label) {
 
             var path = '/analytics/' + $model.id;
-            if ( $scope.currentDate ) {
-                path += '/date/' + moment($scope.currentDate).format('YYYY-MM-DD');
-            }
             $location.path(path);
     };
 
@@ -88,30 +86,35 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
     $http.get(ServerUrl + '/users/'+userId).success(function(data) {
         $scope.targetUserName = data.username;
         $scope.targetName = data.name;
-        var date = new Date(data.lastLocationUpdateDate);
-        $scope.lastLocationDate = date.toLocaleString();
-
+        if (data.lastLocationUpdateDate != null) {
+            var dateLocation = new Date(data.lastLocationUpdateDate);
+            $scope.lastLocationDate = dateLocation.toLocaleString();
+            $scope.currentDate = moment(dateLocation);
+        } else {
+            $scope.lastLocationDate = null;
+            $scope.currentDate = moment();
+            $scope.userMessage = "This user never logged in.";
+        }
         //Placed the url of the picture in a autheticated request - only loads if logged
         $http.get(ServerUrl + '/pictures/'+userId+'/small/show').success(function(data) {
             $scope.hasPicture = true;
             $scope.pictureUrl = ServerUrl + '/pictures/'+userId+'/small/show';
         });
     });
-  $scope.videos = [];
-  $scope.locations = [];
-  $scope.enabledDates = [];
-  $scope.currentVideo = null;
-  $scope.currentDate = ($routeParams.date) ? moment($routeParams.date).toDate() : new Date();
-  $scope.currentTime = ($routeParams.date) ? moment($routeParams.date).toDate() : new Date();
-  $scope.userMessage = '';
-  $scope.gpsOnly = true;
+    $scope.videos = [];
+    $scope.locations = [];
+    $scope.enabledDates = [];
+    $scope.currentVideo = null;
+    $scope.currentDate = null;
+    $scope.currentTime = new Date();
+    $scope.userMessage = '';
+    $scope.gpsOnly = true;
 
-  $scope.mapOptions = {
-    center: new google.maps.LatLng(0,0),
-    zoom: 11,
-    mapTypeId: google.maps.MapTypeId.ROADMAP
-  };
-
+    $scope.mapOptions = {
+        center: new google.maps.LatLng(0,0),
+        zoom: 11,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
     $http.get(ServerUrl + '/users/me').success(function(data) {
         if(data.length === 0){
             return;
@@ -128,7 +131,6 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
         if (newVal) {
             $scope.loadLocations();
             $scope.loadVideos();
-            $scope.loadEnabledDates();
         }
     });
 
@@ -159,6 +161,12 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
         $http.get(ServerUrl + '/users/' + userId + '/dates/enabled')
             .success(function(data) {
                $scope.enabledDates = data;
+
+
+                var calendarElement = angular.element(document.querySelector("div.calendar"));
+                calendarElement.html("<datepicker ng-model=\"currentDate\" min-date=\"minDate\" show-weeks=\"false\" class=\"well well-sm\" date-disabled=\"isDateDisabled(date, mode)\"></datepicker>");
+                $compile(calendarElement.contents())($scope);
+
             }).error(function (data, status, headers, config) {
                 console.log('error');
             });
@@ -171,7 +179,9 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
             .success(function(data) {
                 $scope.currentMap = HEATMAP_OPT;
                 if(data.length === 0){
-                    $scope.userMessage = "This user didn't login at this date.";
+                    if ($scope.userMessage == null) {
+                        $scope.userMessage = "This user didn't login at this date.";
+                    }
                     cleanMap();
                     return;
                 }
@@ -193,6 +203,7 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
         var date = moment($scope.currentDate).format('YYYY-MM-DD');
         $http.get(ServerUrl + '/users/' + userId + '/videos/from/' + date )
             .success(function(data) {
+                console.log("videos "+data.length);
                 $scope.videos = data;
                 for(var i=0; i<$scope.videos.length; i++){
                     $scope.videos[i].src=getVideoUrlWithId(ServerUrl, userId, $scope, $scope.videos[i].id);
@@ -300,21 +311,24 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
       $scope.loadEnabledDates();
   }
 
-    var dateIsInArray = function(date,arrayOfDates) {
+    var isDateInArray = function(date,arrayOfDates) {
         var dateToQuery = moment(date);
         for(var i=0; i<arrayOfDates.length; i++){
-            if(moment(arrayOfDates[i]).isSame(dateToQuery)){
+            var dateCalendar = moment(arrayOfDates[i].enabled_dates);
+            if(dateCalendar.isSame(dateToQuery)){
                 return true;
+            } else if (!dateCalendar.isBefore(dateToQuery)){
+                return false;
             }
         }
         return false;
     };
 
-    $scope.isDateEnabled = function(date, mode) {
-        if (dateIsInArray(date, $scope.enabledDates)) {
-            return true;
+    $scope.isDateDisabled = function(date, mode) {
+        if (isDateInArray(date, $scope.enabledDates)) {
+            return false;
         }
-        return false;
+        return true;
     };
 
     window.setTimeout(function(){
@@ -331,4 +345,5 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $ro
     });
 
     //$scope.updateSlider();
+
 });

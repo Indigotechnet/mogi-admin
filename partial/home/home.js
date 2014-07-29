@@ -174,8 +174,7 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
 
     $scope.goToUser = function(user) {
         var path = '/analytics/' + user.id;
-        var now = moment();
-        path += '/date/' + moment(now).format('YYYY-MM-DD');
+        path += '/date/' + moment().format('YYYY-MM-DD');
         $location.path(path);
     };
 

@@ -34,11 +34,10 @@
                     </div>
                 </div>
                 <div class="calendar">
-                    <hr>
-                    <datepicker ng-model="currentDate" min-date="minDate" show-weeks="false" class="well well-sm" date-disabled="isDateEnabled(date, mode)"></datepicker>
+
                 </div>
                 <hr><!--TODO fix hr`s position/layout-->
-                <em>{{currentDate | date:'fullDate' }}</em><br>
+                <em>{{currentDate.toDate() | date:'fullDate' }}</em><br>
                 <span>{{videos.length}} Videos</span>
                 <hr>
                 <!--<input type="checkbox" ng-model="gpsOnly" />  Gps Only-->
