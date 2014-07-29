@@ -9,7 +9,7 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
 
     $http.get(ServerUrl + '/users').success(function(data) {
         angular.forEach(data, function(user) {
-            if (user.profilePicture != null) {
+            if (user.profilePicture != null && user.profilePicture != undefined) {
                 user.profilePicture = data.baseUrl = ServerUrl + '/pictures/' + user.id + '/original/show';
             }
         });

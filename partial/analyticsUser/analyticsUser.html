@@ -5,7 +5,7 @@
 
                 <script type="text/ng-template" id="customTemplate.html">
                     <div class="item">
-                        <img class="pictureUrl" src="{{match.model.profilePicture}}" height="45" ng-show="match.model.profilePicture != null">
+                        <img class="pictureUrl" src="{{match.model.profilePicture}}" height="45" ng-show="match.model.profilePicture != null && match.model.profilePicture != undefined">
                         <p class="title">{{match.model.name}}</p>
                         <p class="subtitle">{{match.model.username}}</p>
                     </div>
