@@ -1,6 +1,5 @@
 /* global google */
 angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $compile,$routeParams, $http, ServerUrl, $window, $sce, $document, $location){
-    $scope.selected = undefined;
 
     $scope.myStyle = {
         "height": "400px",
@@ -40,7 +39,6 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
     }
 
     function cleanMap(){
-        console.log('cleanMap');
         $scope.locations = [];
         $scope.videos = [];
         changeMap();
@@ -136,16 +134,8 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
 
     $scope.$watch('currentTime', function(newVal) {
         if (newVal) {
-            console.log('currentTime with newVal=['+newVal+']');
-            console.log('$scope.currentTime=['+$scope.currentTime+']');
             $scope.updateLocationOnMap();
             $scope.scrollVideoToCurrentTime();
-        }
-    });
-
-    $scope.$watch('user', function(newVal) {
-        if (newVal) {
-            console.log('user with newVal=[' + newVal + ']');
         }
     });
 
@@ -157,7 +147,6 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
   };
 
     $scope.loadEnabledDates = function() {
-        console.log('loadEnabledDates');
         $http.get(ServerUrl + '/users/' + userId + '/dates/enabled')
             .success(function(data) {
                $scope.enabledDates = data;
@@ -168,13 +157,12 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
                 $compile(calendarElement.contents())($scope);
 
             }).error(function (data, status, headers, config) {
-                console.log('error');
+
             });
     };
 
     $scope.loadLocations = function() {
         var date = moment($scope.currentDate).format('YYYY-MM-DD');
-        console.log('loadLocations with date=['+date+']');
         $http.get(ServerUrl + '/users/' + userId + '/locations/' + date )
             .success(function(data) {
                 $scope.currentMap = HEATMAP_OPT;
@@ -212,7 +200,6 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
     };
 
     $scope.updateSlider = function() {
-        console.log('updateSlider');
         if(!$scope.locations){
             $scope.sliderFrom = 0;
             $scope.sliderTo = 0;
@@ -228,7 +215,6 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
                 newest = moment(loc.date);
             }
         });
-        console.log('oldest=['+oldest.toISOString()+'] and newest=['+newest.toISOString()+']');
         $scope.sliderFrom = oldest.valueOf();
         $scope.sliderTo = newest.valueOf();
     };
@@ -265,7 +251,6 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
   };
 
     $scope.updateLocationOnMap = function () {
-        console.log('updateLocationOnMap');
         var isoDate = moment($scope.currentTime).toISOString(), location;
         _.some($scope.locations, function(loc) {
             if ( loc.date >= isoDate ) {
@@ -275,7 +260,6 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
             return false;
         });
         if ( location ) {
-            console.log('updateLocationOnMap with time=['+location.date+']');
             var latLng = new google.maps.LatLng(location.lat, location.lng);
             currentPositionMarker.setMap($scope.locationMap);
             currentPositionMarker.setPosition(latLng);
@@ -286,14 +270,16 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
     };
 
     $scope.scrollVideoToCurrentTime = function () {
+        if(!$scope.videos || $scope.videos.length <= 0){
+            return;
+        }
+        var nOfVideos = $scope.videos.length;
         var isoDate = moment($scope.currentTime).toISOString();
         var video = _.find($scope.videos, function (video) {
             var formatDate = Date.parse(isoDate);
             return formatDate >= Date.parse(video.from) && formatDate <= Date.parse(video.to);
         });
         if ( video ) {
-            console.log('found video from=['+video.from+'] to=['+video.to+'] and id=['+video.id+']');
-            //var videoEl = angular.element( document.querySelector( '#'+video.id ) );
             var videoEL = angular.element($document)[0].getElementById(video.id);
             if(videoEL){
                 var x = window.scrollX, y = window.scrollY;
@@ -301,7 +287,29 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
                 window.scrollTo(x, y);
             }
         }else{
-            //TODO if video not found scroll videos relative to the timeSlider.
+            var curHour = moment($scope.currentTime).unix();
+            var curFrom = moment($scope.sliderFrom).unix();
+            var curTo = moment($scope.sliderTo).unix();
+            var sliderPercentage = Math.round((curHour - curFrom)/(curTo - curFrom)*100);
+            if(sliderPercentage>0){
+                var targetVideo = Math.round(nOfVideos * sliderPercentage / 100);
+                if(targetVideo>0){
+                    scrollToVideoId($scope.videos[targetVideo-1].id);
+                }else{
+                    scrollToVideoId($scope.videos[targetVideo].id);
+                }
+            }else if(nOfVideos){
+                scrollToVideoId($scope.videos[0].id);
+            }
+        }
+    };
+
+    var scrollToVideoId = function(id){
+        var videoEL = angular.element($document)[0].getElementById(id);
+        if(videoEL){
+            var x = window.scrollX, y = window.scrollY;
+            videoEL.focus();
+            window.scrollTo(x, y);
         }
     };
 
