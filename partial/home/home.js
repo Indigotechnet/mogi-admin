@@ -25,6 +25,7 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
 
     $scope.windowHeight = window.innerHeight;
     $scope.windowWidth = window.innerWidth;
+    $rootScope.selected = 'realtime';
 
   $scope.mapOptions = {
     center: new google.maps.LatLng(0,0),
