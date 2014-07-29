@@ -1,6 +1,5 @@
 /* global google */
 angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $routeParams, $http, ServerUrl, $window, $sce, $document, $location){
-    $scope.selected = undefined;
 
     $scope.myStyle = {
         "height": "400px",
