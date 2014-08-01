@@ -66,14 +66,13 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
             heatmap.setMap($scope.locationMap);
         } else {
             heatmap.setMap(null);
-            if (pathmap == null){
-                pathmap = new google.maps.Polyline({
-                    path: path ,
-                    strokeColor: '#428bca',
-                    strokeOpacity: 1.0,
-                    strokeWeight: 2
-                });
-            }
+
+            pathmap = new google.maps.Polyline({
+                path: path ,
+                strokeColor: '#428bca',
+                strokeOpacity: 1.0,
+                strokeWeight: 2
+            });
             pathmap.setMap($scope.locationMap);
         }
         $scope.locationMap.fitBounds(bounds);
