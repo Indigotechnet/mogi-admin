@@ -129,15 +129,12 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
         if (newVal) {
             $scope.disableHighPrecision = false;
             $scope.highPrecision = true;
-            console.log('load via current date watch');
             $scope.loadLocations();
             $scope.loadVideos();
         }
     });
 
     $scope.$watch('currentTime', function(newVal) {
-        console.log('newVal=['+newVal+']');
-        console.log('currentTime=['+moment($scope.currentTime).toISOString()+']');
         if (newVal) {
             $scope.updateLocationOnMap();
             $scope.scrollVideoToCurrentTime();
@@ -145,7 +142,6 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
     });
 
     $scope.$watch('highPrecision', function(newVal) {
-        console.log('load via high precision watch');
         $scope.loadLocations();
     });
 
@@ -186,7 +182,6 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
                 cleanMap();
                 $scope.disableHighPrecision = true;
                 $scope.highPrecision = false;
-                console.log('load via low precision locations');
                 $scope.loadLocations();
                 return;
             }
@@ -202,7 +197,6 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
         var date = moment($scope.currentDate).format('YYYY-MM-DD');
         $http.get(ServerUrl + '/users/' + userId + '/videos/from/' + date )
             .success(function(data) {
-                console.log("videos "+data.length);
                 $scope.videos = data;
                 for(var i=0; i<$scope.videos.length; i++){
                     $scope.videos[i].src=getVideoUrlWithId(ServerUrl, userId, $scope, $scope.videos[i].id);
@@ -225,12 +219,9 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
         });
         $scope.sliderFrom = oldest.valueOf();
         $scope.sliderTo = newest.valueOf();
-        $scope.currentTime = oldest.valueOf();
-        //$scope.currentTime = oldest.toDate();
+        //$scope.currentTime = oldest.valueOf();
+        $scope.currentTime = oldest.toDate();
 
-        console.log('sliderFrom=['+oldest.toISOString()+']');
-        console.log('sliderTo=['+newest.toISOString()+']');
-        console.log('current=['+moment($scope.currentTime).toISOString()+']');
 
         if(oldestPosition){
             var pos = new google.maps.LatLng(oldestPosition.lat, oldestPosition.lng);
