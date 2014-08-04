@@ -180,9 +180,11 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
             $scope.currentMap = HEATMAP_OPT;
             if(data.length === 0){
                 cleanMap();
-                $scope.disableHighPrecision = true;
-                $scope.highPrecision = false;
-                $scope.loadLocations();
+                if(!$scope.disableHighPrecision){
+                    $scope.disableHighPrecision = true;
+                    $scope.highPrecision = false;
+                    $scope.loadLocations();
+                }
                 return;
             }
             $scope.userMessage = '';
