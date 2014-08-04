@@ -41,7 +41,8 @@
                 <em>{{currentDate | date:'fullDate' }}</em><br>
                 <span>{{videos.length}} Videos</span>
                 <hr>
-                <!--<input type="checkbox" ng-model="gpsOnly" />  Gps Only-->
+                <div class="alert alert-warning" role="alert" ng-show="disableHighPrecision">This day does not have high precision locations.</div>
+                <input type="checkbox" ng-model="highPrecision" ng-disabled="disableHighPrecision"/>  Highest Precision
                 <input type="radio" ng-model="currentMap" value="HEATMAP" ng-change='changeMap()'/> Heatmap
                 <input type="radio" ng-model="currentMap" value="PATH" ng-change='changeMap()'/>  Path
             </div>
@@ -50,7 +51,7 @@
             <div ui-map="locationMap" ui-options="mapOptions" ng-style="myStyle" id="location_map_canvas"></div>
             <div class="col-md-12">
                 <span class="current-time" ng-bind="currentTime | date : 'HH:mm:ss' "></span>
-                <time-slider min="sliderFrom" max="sliderTo" class="timeSlider" ng-model="currentTime" step="720"></time-slider>
+                <time-slider min="sliderFrom" max="sliderTo" class="timeSlider" ng-model="currentTime" step="0"></time-slider>
             </div>
             <div class="videoList">
                 <ul class="list-inline">

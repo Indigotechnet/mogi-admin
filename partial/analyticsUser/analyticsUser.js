@@ -1,5 +1,5 @@
 /* global google */
-angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $compile,$routeParams, $http, ServerUrl, $window, $sce, $document, $location){
+angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $compile,$routeParams, $http, ServerUrl, $window, $sce, $document, $location, locationService){
     $scope.selected = undefined;
     $scope.myStyle = {
         "height": "400px",
@@ -106,7 +106,8 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
     $scope.currentDate = null;
     $scope.currentTime = new Date();
     $scope.userMessage = '';
-    $scope.gpsOnly = true;
+    $scope.highPrecision = true;
+    $scope.disableHighPrecision = false;
 
     $scope.mapOptions = {
         center: new google.maps.LatLng(0,0),
@@ -127,16 +128,26 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
 
     $scope.$watch('currentDate', function(newVal) {
         if (newVal) {
+            $scope.disableHighPrecision = false;
+            $scope.highPrecision = true;
+            console.log('load via current date watch');
             $scope.loadLocations();
             $scope.loadVideos();
         }
     });
 
     $scope.$watch('currentTime', function(newVal) {
+        console.log('newVal=['+newVal+']');
+        console.log('currentTime=['+moment($scope.currentTime).toISOString()+']');
         if (newVal) {
             $scope.updateLocationOnMap();
             $scope.scrollVideoToCurrentTime();
         }
+    });
+
+    $scope.$watch('highPrecision', function(newVal) {
+        console.log('load via high precision watch');
+        $scope.loadLocations();
     });
 
   $scope.formatTime = function (value) {
@@ -162,29 +173,30 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
     };
 
     $scope.loadLocations = function() {
+        if(!moment($scope.currentDate).isValid()) {
+            return;
+        }
         var date = moment($scope.currentDate).format('YYYY-MM-DD');
-        $http.get(ServerUrl + '/users/' + userId + '/locations/' + date )
-            .success(function(data) {
-                $scope.currentMap = HEATMAP_OPT;
-                if(data.length === 0){
-                    if ($scope.userMessage == null) {
-                        $scope.userMessage = "This user didn't login at this date.";
-                    }
-                    cleanMap();
-                    return;
-                }
-                $scope.userMessage = '';
-                $scope.locations = data;
+        var accuracy;
+        if($scope.highPrecision && !$scope.disableHighPrecision){
+            accuracy = 15;
+        }
+        locationService.async(ServerUrl, date, accuracy, userId).then(function(data) {
+            $scope.currentMap = HEATMAP_OPT;
+            if(data.length === 0){
+                cleanMap();
+                $scope.disableHighPrecision = true;
+                $scope.highPrecision = false;
+                console.log('load via low precision locations');
+                $scope.loadLocations();
+                return;
+            }
+            $scope.userMessage = '';
+            $scope.locations = data;
 
-                var pos = new google.maps.LatLng($scope.locations[0].lat, $scope.locations[0].lng);
-                $scope.currentTime = moment($scope.locations[0].date).valueOf();
-
-                currentPositionMarker.setPosition(pos);
-                currentPositionMarker.setMap($scope.locationMap);
-
-                changeMap();
-                $scope.updateSlider();
-            });
+            changeMap();
+            $scope.updateSlider();
+        });
     };
 
     $scope.loadVideos = function() {
@@ -200,16 +212,13 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
     };
 
     $scope.updateSlider = function() {
-        if(!$scope.locations){
-            $scope.sliderFrom = 0;
-            $scope.sliderTo = 0;
-            return;
-        }
-        var oldest = moment($scope.currentTime);
-        var newest = moment($scope.currentTime);
+        var oldest = moment($scope.locations[0].date);
+        var newest = moment($scope.locations[0].date);
+        var oldestPosition;
         _.some($scope.locations, function(loc) {
             if(moment(loc.date).isBefore(oldest)){
                 oldest = moment(loc.date);
+                oldestPosition = loc;
             }
             if(moment(loc.date).isAfter(newest)){
                 newest = moment(loc.date);
@@ -217,6 +226,18 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
         });
         $scope.sliderFrom = oldest.valueOf();
         $scope.sliderTo = newest.valueOf();
+        $scope.currentTime = oldest.valueOf();
+        //$scope.currentTime = oldest.toDate();
+
+        console.log('sliderFrom=['+oldest.toISOString()+']');
+        console.log('sliderTo=['+newest.toISOString()+']');
+        console.log('current=['+moment($scope.currentTime).toISOString()+']');
+
+        if(oldestPosition){
+            var pos = new google.maps.LatLng(oldestPosition.lat, oldestPosition.lng);
+            currentPositionMarker.setPosition(pos);
+            currentPositionMarker.setMap($scope.locationMap);
+        }
     };
 
   $scope.changeMap = changeMap;
@@ -343,9 +364,5 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
     angular.element($window).bind('resize', function() {
         $scope.myStyle["height"] = "400px";
         google.maps.event.trigger($scope.locationMap, 'resize');
-        //changeMap();
     });
-
-    //$scope.updateSlider();
-
 });
