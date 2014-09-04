@@ -183,7 +183,7 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
         locationService.async(ServerUrl, date, accuracy, userId).then(function(data) {
             $scope.currentMap = HEATMAP_OPT;
             if(data.length === 0){
-                cleanMap();
+                $scope.locations = [];
                 $scope.disableHighPrecision = true;
                 $scope.highPrecision = false;
                 console.log('load via low precision locations');
