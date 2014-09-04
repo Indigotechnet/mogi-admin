@@ -144,11 +144,6 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
         }
     });
 
-    $scope.$watch('highPrecision', function(newVal) {
-        console.log('load via high precision watch');
-        $scope.loadLocations();
-    });
-
   $scope.formatTime = function (value) {
     var hour = value / 60;
     var minutes = value % 60;
