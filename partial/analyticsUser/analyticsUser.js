@@ -106,7 +106,6 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
                 $scope.locations = [];
                 $scope.disableHighPrecision = true;
                 $scope.highPrecision = false;
-                loadLocations();
                 console.log('load via low precision locations');
                 return;
             }
@@ -117,6 +116,10 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
             $scope.updateSlider();
         });
     };
+
+    $scope.$watch('highPrecision', function(newVal) {
+        loadLocations();
+    });
 
     var loadVideos = function() {
         var date = moment($scope.currentDate).format('YYYY-MM-DD');
