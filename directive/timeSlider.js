@@ -21,9 +21,9 @@ angular.module('mogi-admin').directive('timeSlider', function() {
 
         scope.$watch('ngModel', function(newVal) {
           if (newVal) {
-            rangeInput.value = moment(newVal).valueOf();
-            rangeInput.min = scope.min;
-            rangeInput.max = scope.max;
+              rangeInput.min = scope.min;
+              rangeInput.max = scope.max;
+              rangeInput.value = moment(newVal).valueOf();
           }
         });
 
