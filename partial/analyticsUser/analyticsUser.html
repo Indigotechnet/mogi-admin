@@ -43,8 +43,8 @@
                 <hr>
                 <div class="alert alert-warning" role="alert" ng-show="disableHighPrecision">This day does not have high precision locations.</div>
                 <input type="checkbox" ng-model="highPrecision" ng-disabled="disableHighPrecision"/>  Highest Precision
-                <input type="radio" ng-model="currentMap" value="HEATMAP" ng-change='changeMap()'/> Heatmap
-                <input type="radio" ng-model="currentMap" value="PATH" ng-change='changeMap()'/>  Path
+                <input type="radio" ng-model="currentMap" value="HEATMAP" ng-change='updateMap()'/> Heatmap
+                <input type="radio" ng-model="currentMap" value="PATH" ng-change='updateMap()'/>  Path
             </div>
         </div>
         <div class="col-md-9 column">

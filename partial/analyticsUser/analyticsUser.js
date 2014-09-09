@@ -132,7 +132,7 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
 
             });
     };
-    function updateMap() {
+    $scope.updateMap = function() {
         if ($scope.currentMap === HEATMAP_OPT) {
             if (pathmap != null) {
                 pathmap.setMap(null);
@@ -158,7 +158,7 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
         }
         $scope.locationMap.fitBounds(bounds);
         $scope.locationMap.setCenter(currentPositionMarker.getPosition());
-    }
+    };
 
     function resetMap() {
         path = [];
@@ -169,7 +169,7 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
             bounds.extend(coord);
         });
         google.maps.event.trigger($scope.locationMap, 'resize');
-        updateMap();
+        $scope.updateMap();
     }
 
     $scope.updateSlider = function() {
