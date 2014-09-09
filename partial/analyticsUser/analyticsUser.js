@@ -167,7 +167,7 @@ angular.module('mogi-admin').controller('AnalyticsUserCtrl',function($scope, $co
             var coord = new google.maps.LatLng(loc.lat, loc.lng);
             path.push(coord);
             bounds.extend(coord);
-         });
+        });
         google.maps.event.trigger($scope.locationMap, 'resize');
         updateMap();
     }
