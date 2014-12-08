@@ -6,7 +6,17 @@ angular.module('mogi-admin').controller('AnalyticsCtrl',function($scope, $http, 
     date : '',
     page : 0
   };
+  $http.get(ServerUrl + '/users',
+    {
+      params: {
+        page: $scope.page
+      }
+    }
+  ).success(function (data) {
+      $scope.results = data;
+    }).error(function (data) {
 
+    });
   $scope.search = function() {
     $http.get(ServerUrl + '/users',
       { params : {

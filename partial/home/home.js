@@ -26,6 +26,7 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
     $scope.windowHeight = window.innerHeight;
     $scope.windowWidth = window.innerWidth;
     $rootScope.selected = 'realtime';
+  $scope.modalInstance = null;
 
   $scope.mapOptions = {
     center: new google.maps.LatLng(0,0),
@@ -147,6 +148,9 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
         delete $scope.activeStreams[data.id];
         $scope.activeUsers[data.id].marker.setIcon(markerIcons['red']);
         toaster.clearToastByUserId(data.id);
+      if ($scope.modalInstance != null && $scope.modalInstance !== undefined) {
+        $scope.modalInstance.close();
+      }
         $scope.$apply();
     });
   });
@@ -175,7 +179,6 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
 
     $scope.goToUser = function(user) {
         var path = '/analytics/' + user.id;
-        path += '/date/' + moment().format('YYYY-MM-DD');
         $location.path(path);
     };
 
@@ -264,7 +267,7 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
 
   function showModal(user){
       console.log('showModal with user=['+user+']');
-      $modal.open({
+    $scope.modalInstance = $modal.open({
           templateUrl: 'partial/home/player.html',
           controller: 'ModalInstanceCtrl',
           backdrop: false,
