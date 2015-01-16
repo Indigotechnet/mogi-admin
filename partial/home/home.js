@@ -21,7 +21,7 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
 
             });
     };
-}).controller('HomeCtrl', function($scope, $modal, $http, socket, ServerUrl, toaster, $window, $rootScope, $location){
+}).controller('HomeCtrl', function ($scope, $modal, $http, socket, ServerUrl, toaster, $window, $rootScope, $location, $timeout) {
 
     $scope.windowHeight = window.innerHeight;
     $scope.windowWidth = window.innerWidth;
@@ -79,16 +79,23 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
     });
 
   var markerIcons = {
-    'red' : 'http://www.rmsp.com/wp-content/plugins/rmsp/img/icons/map/spotlight-poi-red.png',
-    'green' : 'http://www.rmsp.com/wp-content/plugins/rmsp/img/icons/map/spotlight-poi-green.png'
+    'red': 'http://www.google.com/intl/en_ALL/mapfiles/marker.png',
+    'green': 'http://www.google.com/intl/en_ALL/mapfiles/marker_green.png',
+    'grey': 'http://www.google.com/intl/en_ALL/mapfiles/marker_grey.png'
   };
 
+  var timeoutUser = function (user) {
+    user.marker.setIcon(markerIcons['grey']);
+  };
   var loadUser = function (data) {
     console.log("Socket: Location received!");
     var pos = null;
     if ( $scope.activeUsers[data.id] ) {
       pos = new google.maps.LatLng(data.lat, data.lng);
       $scope.activeUsers[data.id].marker.setPosition(pos);
+      if ($scope.activeUsers[data.id].marker.icon === markerIcons['grey']) {
+        $scope.activeUsers[data.id].marker.setIcon(markerIcons['red']);
+      }
     } else {
       pos = new google.maps.LatLng(data.lat, data.lng);
       var bounds = new google.maps.LatLngBounds();
@@ -111,13 +118,21 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
         marker : marker,
         groupId: data.groupId,
         streamUrl: data.streamUrl,
-        picture: data.profilePicture ? ServerUrl + data.profilePicture : null
+        picture: data.profilePicture ? ServerUrl + data.profilePicture : null,
+        timeoutPromisse: null
       };
+
       for (var key in $scope.activeUsers){
           bounds.extend($scope.activeUsers[key].marker.getPosition());
       }
       $scope.myMap.fitBounds(bounds);
     }
+    if ($scope.activeUsers[data.id].timeoutPromisse != null) {
+      $timeout.cancel($scope.activeUsers[data.id].timeoutPromisse);
+    }
+    $scope.activeUsers[data.id].timeoutPromisse = $timeout(function () {
+      timeoutUser($scope.activeUsers[data.id]);
+    }, 60000);
   };
 
 
