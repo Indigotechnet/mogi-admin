@@ -28,7 +28,8 @@
     "load-grunt-tasks": "~0.2",
     "grunt-ng-constant": "~0.4.8",
     "karma-jasmine": "~0.2.2",
-    "karma-chrome-launcher": "~0.1.2"
+    "karma-chrome-launcher": "~0.1.2",
+    "angular-file-upload":"1.6.4"
   },
   "dependencies": {
     "socket.io": "~0.9.16"
