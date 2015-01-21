@@ -13,26 +13,25 @@
             </div>
         </div>
         <div ui-map-info-window="userWindow" ng-show="currentUser">
-            <div style="overflow: hidden;">
-                <div style="float: left;">
+          <div style="">
+            <div style="float: left;width:80px">
                     <img ng-src="{{currentUser.picture}}" style="padding-right: 5px; padding-bottom: 5px" width="80" ng-show="currentUser.picture">
+            </div>
+            <div style="padding-top: 20px;overflow: hidden;">
+              <strong>{{currentUser.userName}}</strong><br>
+              <a ng-click="goToUser(currentUser)">View history</a>
+
+              <div ng-show="isOnline(currentUser)">
+                <div>
+                  <div class="btn-group">
+                    <a class="btn btn-primary" ng-click="requestStream(currentUser)"
+                       ng-if="!activeStreams[currentUser.userId]" ng-bind="streamButtonText"></a>
+                  </div>
                 </div>
-                <div style="float: left; padding-top: 20px;">
-                    <strong>{{currentUser.userName}}</strong><br>
-                    <a ng-click="goToUser(currentUser)">View history</a>
+              </div>
                 </div>
             </div>
-            <div>
-                <div style="width: 180px; ">
-                    <p>Streaming: <strong ng-bind="streamingMessage"></strong></p>
-                    <div class="btn-group">
-                        <a class="btn btn-primary" ng-click="requestStream(currentUser)"
-                           ng-if="!activeStreams[currentUser.userId]">Begin</a>
-                        <a class="btn btn-success" ng-if="activeStreams[currentUser.userId]"
-                           ng-click="stopStream(currentUser)">Stop</a>
-                    </div>
-                </div>
-            </div>
+
         </div>
     </div>
 </div>

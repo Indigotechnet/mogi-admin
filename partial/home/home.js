@@ -23,10 +23,11 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
     };
 }).controller('HomeCtrl', function ($scope, $modal, $http, socket, ServerUrl, toaster, $window, $rootScope, $location, $timeout) {
 
-    $scope.windowHeight = window.innerHeight;
-    $scope.windowWidth = window.innerWidth;
-    $rootScope.selected = 'realtime';
+  $scope.windowHeight = window.innerHeight;
+  $scope.windowWidth = window.innerWidth;
+  $rootScope.selected = 'realtime';
   $scope.modalInstance = null;
+  $scope.streamButtonText = 'Livestream';
 
   $scope.mapOptions = {
     center: new google.maps.LatLng(0,0),
@@ -51,6 +52,10 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
     streetViewControlOptions: {
       position: google.maps.ControlPosition.LEFT_CENTER
     }
+  };
+
+  $scope.isOnline = function (currentUser) {
+    return currentUser != null && currentUser.marker.icon !== markerIcons['grey'];
   };
 
   $scope.myStyle = {
@@ -199,7 +204,7 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
 
   $scope.showUser = function(userId) {
     $scope.currentUser = $scope.activeUsers[userId];
-    $scope.streamingMessage = '';
+    $scope.streamButtonText = 'Livestream';
     if ( $scope.currentUser ) {
       google.maps.event.trigger($scope.myMap, "resize");
       $scope.myMap.setCenter($scope.currentUser.marker.getPosition());
@@ -208,14 +213,14 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
   };
 
   $scope.requestStream = function(user) {
-    $scope.streamingMessage = 'Sending request...';
+    $scope.streamButtonText = 'Sending...';
     $http.post(ServerUrl + '/streams/' + user.id + '/start')
       .success(function(data) {
-            user.streamUrl = data.streamUrl;
-            setStreamingUser(user);
+        user.streamUrl = data.streamUrl;
+        setStreamingUser(user);
       })
       .error(function(data) {
-        $scope.streamingMessage = data.message;
+        $scope.streamButtonText = data.message;
       });
   };
 
