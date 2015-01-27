@@ -72,13 +72,19 @@
             <!--<a href="#" ng-click="selected = 'realtime'" class="logo"><img src="http://igarape.org.br/wp-content/themes/igarape_v2/images/logo.png" alt="Smart Policing" style="width: 160px;"></a>-->
             <span class="logo">Smart Policing</span>
             <div class="map-action-bar input-group" ng-show="selected === 'realtime'">
-                <input type="text" class="form-control" ng-model="usersFilter" placeholder="Type to filter the map..." />
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" type="submit" ng-click="filterUsers();">
-                            <i class="glyphicon glyphicon-search"></i>
-                        </button>
-                    </div>
+
+              <!--show search-bar -->
+              <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1" style="background-color: #fff"><i class="glyphicon glyphicon-search"></i></span>
+                  <input type="text" class="form-control" ng-model="usersFilter" ng-change="filterUsers();" placeholder="Type to filter the map..." aria-describedby="basic-addon1" />
+              </div>
+
+
+
             </div>
+
+
+
             <ul class="nav">
                 <li class="home"><a href="#" ng-click="selected = 'realtime'">Realtime</a></li>
                 <li class="services"><a href="#/analytics" ng-click="selected = 'analytics'">Analytics</a></li>

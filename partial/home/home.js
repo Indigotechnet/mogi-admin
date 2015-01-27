@@ -191,15 +191,21 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
           });
 
       }else{
-          var usersFound = [];
+
+          //allows filter by regex
           angular.forEach($scope.activeUsers, function(user) {
-              //TODO add group so we can search for specific groups
-              if(user.userName === searchString || user.login === searchString){
-                  user.marker.setMap($scope.myMap);
-              }else{
-                  user.marker.setMap(null);
-              }
+            //TODO add group so we can search for specific groups
+            var l_user_name = user.userName;
+            var l_user_login = user.login;
+            var re_match = new RegExp("\\b" + searchString, "g");
+
+            if( l_user_name.match( re_match ) || l_user_login.match( re_match) ){
+              user.marker.setMap($scope.myMap);
+            }else{
+              user.marker.setMap(null);
+            }
           });
+
       }
   };
 
