@@ -182,8 +182,14 @@ angular.module('mogi-admin').controller('ModalInstanceCtrl',function ($scope, $m
   $scope.filterUsers = function(data) {
       var searchString = data.targetScope.usersFilter;
       if(!searchString){
-          //TODO
-          return;
+
+          //show all users
+          angular.forEach($scope.activeUsers, function(user) {
+            //TODO add group so we can search for specific groups
+            user.marker.setMap($scope.myMap);
+
+          });
+
       }else{
           var usersFound = [];
           angular.forEach($scope.activeUsers, function(user) {
