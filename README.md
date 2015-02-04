@@ -11,7 +11,6 @@ To use it make sure you have NodeJS and NPM properly configured the run
 npm install -g grunt-cli bower yo generator-cg-angular
 npm install
 bower install
-
 ```
 
 ## Tasks
