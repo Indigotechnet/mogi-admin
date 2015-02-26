@@ -1,4 +1,4 @@
-angular.module('mogi-admin', ['ngRoute','ngAnimate','ui.bootstrap','ui.map','http-auth-interceptor', 'angular-jwplayer' , 'toaster', 'angularFileUpload']);
+angular.module('mogi-admin', ['ngRoute','ngAnimate','ui.bootstrap','ui.map','http-auth-interceptor', 'angular-jwplayer' , 'toaster', 'angularFileUpload', 'ngCookies']);
 
 angular.module('mogi-admin').constant('ServerUrl', 'http://mogi-api.igarape.org');
 //angular.module('mogi-admin').constant('ServerUrl', 'http://localhost:3000');

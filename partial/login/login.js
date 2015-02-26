@@ -1,9 +1,8 @@
 angular.module('mogi-admin')
-.factory('loginService',function($modal, $http, authService, socket) {
+.factory('loginService',function($rootScope, $cookieStore, $modal, $http, authService, socket) {
 
   var loginService = {},
-      modal = null,
-      token = '';
+      modal = null;
 
   loginService.show = function() {
     if ( !modal ) {
@@ -16,21 +15,33 @@ angular.module('mogi-admin')
   };
 
   loginService.getToken = function() {
-    return token;
+    if ($rootScope.globals == null && !$cookieStore.get('globals')){
+      return null;
+    }
+    if ($rootScope.globals == null){
+      $rootScope.globals = $cookieStore.get('globals');
+    }
+    return $rootScope.globals.currentUser.token;
   };
 
-  loginService.setToken = function(accessToken) {
-    token = accessToken;
+  loginService.setToken = function(userName, accessToken) {
+    $rootScope.globals = {
+      currentUser: {
+        username: userName,
+        token: accessToken
+      }
+    };
+    $cookieStore.put('globals', $rootScope.globals);
     authService.loginConfirmed();
-    socket.connect(token);
+    socket.connect($rootScope.globals.currentUser.token);
   };
 
   loginService.isAuthenticated = function() {
-    return token != null && token.length > 0;
+    return loginService.getToken() != null && loginService.getToken().length > 0;
   };
 
   return loginService;
-}).controller('LoginCtrl',function($scope, $modalInstance, $http, loginService, ServerUrl){
+}).controller('LoginCtrl',function($scope, $modalInstance, $http, loginService, ServerUrl, $rootScope, $cookieStore){
 
     $scope.username = '';
     $scope.password = '';
@@ -70,7 +81,7 @@ angular.module('mogi-admin')
       password : $scope.password,
       scope : 'admin'
     }).success(function(token) {
-        loginService.setToken(token.token);
+        loginService.setToken($scope.username, token.token);
         $modalInstance.close();
     }).error(function (data, status, headers, config) {
         $scope.errorMessage = 'Wrong login/pass combination';
@@ -87,9 +98,14 @@ angular.module('mogi-admin')
         if ( config.url.indexOf(serverUrl) > -1  && loginService.getToken() ) {
           config.headers.Authorization = 'Bearer ' + loginService.getToken();
         }
-
         return config;
       }
     };
   }]);
-});
+}).run(['$rootScope', '$location', '$cookieStore', '$http',
+    function ($rootScope, $location, $cookieStore, $http) {
+      $rootScope.globals = $cookieStore.get('globals');
+      if ($rootScope.globals && $rootScope.globals.currentUser  ) {
+        $http.defaults.headers.common['Authorization'] = 'Bearer ' + $rootScope.globals.currentUser.token;
+      }
+    }]);
