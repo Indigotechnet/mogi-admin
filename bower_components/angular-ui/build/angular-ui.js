@@ -662,7 +662,7 @@ angular.module('ui.directives').directive('uiKeyup', ['keypressHelper', function
            google maps has them stored.  So we just replace the infowindow element
            with an empty div. (we don't just straight remove it from the dom because
            straight removing things from the dom can mess up angular) */
-          //elm.replaceWith('<div></div>');
+          elm.replaceWith('<div></div>');
 
           //Decorate infoWindow.open to $compile contents before opening
           var _open = infoWindow.open;
