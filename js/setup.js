@@ -1,20 +1,20 @@
 angular.module('mogi-admin', ['ngRoute','ngAnimate','ui.bootstrap','ui.map','http-auth-interceptor', 'angular-jwplayer' , 'toaster', 'angularFileUpload', 'ngCookies']);
 
-angular.module('mogi-admin').constant('ServerUrl', 'http://mogi-api.igarape.org');
-//angular.module('mogi-admin').constant('ServerUrl', 'http://localhost:3000');
+//angular.module('mogi-admin').constant('ServerUrl', 'http://mogi-api.igarape.org');
+angular.module('mogi-admin').constant('ServerUrl', 'http://localhost:3000');
 
 angular.module('mogi-admin')
 .config(['$routeProvider','$httpProvider', function($routeProvider, $httpProvider) {
 
     $routeProvider.
-	  when('/',{templateUrl: 'partial/home/home.html'}).
+	  when('/realtime',{templateUrl: 'partial/home/home.html'}).
       when('/analytics',{templateUrl: 'partial/analytics/analytics.html'}).
 	  when('/analytics/:id',{templateUrl: 'partial/analyticsUser/analyticsUser.html'}).
 	  /* Add New Routes Above */
       when('/user-list', {templateUrl: 'partial/users/user-list.html', controller: 'UserListCtrl'}).
       when('/user-detail/:id', {templateUrl: 'partial/users/user-detail.html', controller: 'UserDetailCtrl'}).
       when('/user-creation', {templateUrl: 'partial/users/user-creation.html', controller: 'UserCreationCtrl'}).
-      otherwise({redirectTo:'/'});
+      otherwise({redirectTo:'/realtime'});
 
         var interceptor = ['$rootScope', '$q', function (scope, $q) {
             function success(response) {
