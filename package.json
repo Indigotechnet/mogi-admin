@@ -1,10 +1,10 @@
 {
   "name": "mogi-admin",
   "version": "0.1.0",
-  "repository" :
-    { "type" : "git"
-        , "url" : "http://github.com/npm/npm.git"
-    },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/npm/npm.git"
+  },
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-livereload": "~0.1.2",
