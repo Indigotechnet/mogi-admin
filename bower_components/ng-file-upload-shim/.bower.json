@@ -1,0 +1,21 @@
+{
+  "name": "ng-file-upload-shim",
+  "main": "ng-file-upload-shim.js",
+  "version": "4.2.1",
+  "homepage": "https://github.com/danialfarid/ng-file-upload",
+  "authors": [
+    "danialf <danial.farid@gmail.com>"
+  ],
+  "description": "shim for ng-file-upload for non html5 browsers IE8-9",
+  "ignore": [],
+  "license": "MIT",
+  "_release": "4.2.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "4.2.1",
+    "commit": "fbc9309bbc9c0c351a1aa52d0f901a5b37cc3ff9"
+  },
+  "_source": "git://github.com/danialfarid/angular-file-upload-shim-bower.git",
+  "_target": "~4.2.1",
+  "_originalSource": "ng-file-upload-shim"
+}
